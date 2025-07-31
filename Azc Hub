@@ -16,7 +16,7 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 				if frame then
 					local textLabel = frame:FindFirstChildOfClass("TextLabel")
 					if textLabel and textLabel:IsA("TextLabel") then
-						-- 🧱 Part شفاف لوضع اللوحة
+						-- 🧱 Part شفاف للعرض
 						local displayPart = Instance.new("Part")
 						displayPart.Name = "TextDisplay"
 						displayPart.Size = Vector3.new(0.5, 0.5, 0.5)
@@ -35,10 +35,10 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 						billboard.AlwaysOnTop = true
 						billboard.Parent = displayPart
 
-						-- 💬 TextLabel (شفاف)
+						-- 💬 TextLabel شفاف
 						local label = Instance.new("TextLabel")
 						label.Size = UDim2.new(1, 0, 1, 0)
-						label.BackgroundTransparency = 1 -- شفافية كاملة
+						label.BackgroundTransparency = 1
 						label.TextColor3 = Color3.new(1, 1, 1)
 						label.TextStrokeColor3 = Color3.new(0, 0, 0)
 						label.TextStrokeTransparency = 0
@@ -47,15 +47,15 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 						label.Text = textLabel.Text
 						label.Parent = billboard
 
-						-- 🔁 تحديث تلقائي لو النص اتغير
-						textLabel:GetPropertyChangedSignal("Text"):Connect(function()
-							label.Text = textLabel.Text
+						-- 🔁 تحديث كل 0.5 ثانية
+						task.spawn(function()
+							while true do
+								if textLabel and label then
+									label.Text = textLabel.Text
+								end
+								task.wait(0.5)
+							end
 						end)
-
-						-- 📛 (اختياري) لو عايز تعرض اسم الموديل بدلًا من TextLabel
-						-- model:GetPropertyChangedSignal("Name"):Connect(function()
-						--     label.Text = model.Name
-						-- end)
 					end
 				end
 			end
