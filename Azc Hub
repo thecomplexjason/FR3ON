@@ -1,11 +1,10 @@
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 local playerDisplayName = LocalPlayer and LocalPlayer.DisplayName or "Unknown"
 
 local PlotsFolder = workspace:WaitForChild("Plots")
-local ESPs = {}
 
+-- البحث عن بيت اللاعب فقط
 for _, model in ipairs(PlotsFolder:GetChildren()) do
 	if model:IsA("Model") then
 		local plotSign = model:FindFirstChild("PlotSign")
@@ -16,64 +15,57 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 				if frame then
 					local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
 					if textLabel then
-						local part = Instance.new("Part")
-						part.Anchored = true
-						part.CanCollide = false
-						part.Transparency = 1
-						part.Size = Vector3.new(0.5, 0.5, 0.5)
-						part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
-						part.Parent = workspace
+						local function isPlayerBase(text)
+							local nameOnly = string.match(text, "^(.-)'s Base$")
+							return nameOnly == playerDisplayName
+						end
 
-						local billboard = Instance.new("BillboardGui")
-						billboard.Size = UDim2.new(0, 150, 0, 30)
-						billboard.StudsOffset = Vector3.new(0, 1.5, 0)
-						billboard.AlwaysOnTop = true
-						billboard.Adornee = part
-						billboard.Parent = part
+						if isPlayerBase(textLabel.Text) then
+							-- Create invisible part above player base
+							local part = Instance.new("Part")
+							part.Anchored = true
+							part.CanCollide = false
+							part.Transparency = 1
+							part.Size = Vector3.new(0.5, 0.5, 0.5)
+							part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
+							part.Parent = workspace
 
-						local label = Instance.new("TextLabel")
-						label.Size = UDim2.new(1, 0, 1, 0)
-						label.BackgroundTransparency = 1
-						label.TextColor3 = Color3.new(1, 1, 1)
-						label.TextStrokeColor3 = Color3.new(0, 0, 0)
-						label.TextStrokeTransparency = 0.2
-						label.TextScaled = true
-						label.Font = Enum.Font.GothamBold
-						label.Text = ""
-						label.Parent = billboard
+							-- BillboardGui
+							local billboard = Instance.new("BillboardGui")
+							billboard.Size = UDim2.new(0, 150, 0, 30)
+							billboard.StudsOffset = Vector3.new(0, 1.5, 0)
+							billboard.AlwaysOnTop = true
+							billboard.Adornee = part
+							billboard.Parent = part
 
-						table.insert(ESPs, {
-							textLabel = textLabel,
-							label = label
-						})
+							local label = Instance.new("TextLabel")
+							label.Size = UDim2.new(1, 0, 1, 0)
+							label.BackgroundTransparency = 1
+							label.TextColor3 = Color3.new(1, 1, 1)
+							label.TextStrokeColor3 = Color3.new(0, 0, 0)
+							label.TextStrokeTransparency = 0.2
+							label.TextScaled = true
+							label.Font = Enum.Font.GothamBold
+							label.Text = playerDisplayName .. " (Your Base)"
+							label.Parent = billboard
+
+							-- تحديث الاسم باستمرار
+							while true do
+								if textLabel and label then
+									local currentText = textLabel.Text
+									local nameOnly = string.match(currentText, "^(.-)'s Base$")
+									if nameOnly == playerDisplayName then
+										label.Text = playerDisplayName .. " (Your Base)"
+									else
+										label.Text = currentText
+									end
+								end
+								wait(0.5)
+							end
+						end
 					end
 				end
 			end
 		end
 	end
-end
-
--- تحديث كل 0.5 ثانية
-while true do
-	for _, esp in ipairs(ESPs) do
-		if esp.textLabel and esp.label then
-			local originalText = esp.textLabel.Text
-
-			if originalText == "Empty Base" then
-				esp.label.Text = "Empty Base"
-			else
-				local nameOnly = string.match(originalText, "^(.-)'s Base$")
-				if nameOnly and nameOnly ~= "" then
-					if nameOnly == playerDisplayName then
-						esp.label.Text = nameOnly .. " (Your Base)"
-					else
-						esp.label.Text = nameOnly
-					end
-				else
-					esp.label.Text = originalText
-				end
-			end
-		end
-	end
-	wait(0.5)
 end
