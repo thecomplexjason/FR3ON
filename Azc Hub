@@ -1,1 +1,49 @@
-print("Script Soon")
+local PlotsFolder = workspace:FindFirstChild("Plots")
+
+if PlotsFolder and PlotsFolder:IsA("Folder") then
+	-- احصل على كل الموديلات جوا الفولدر
+	local models = PlotsFolder:GetChildren()
+
+	-- تأكد إن في موديلات
+	if #models > 0 then
+		-- اختار موديل عشوائي
+		local randomIndex = math.random(1, #models)
+		local selectedModel = models[randomIndex]
+
+		print("Selected Model: " .. selectedModel.Name)
+
+		-- دور على Part اسمه PlotSign
+		local plotSign = selectedModel:FindFirstChild("PlotSign")
+
+		if plotSign and plotSign:IsA("BasePart") then
+			-- دور على SurfaceGui جوا البارت
+			local surfaceGui = plotSign:FindFirstChildOfClass("SurfaceGui")
+
+			if surfaceGui then
+				-- دور على Frame جوا الـ GUI
+				local frame = surfaceGui:FindFirstChildOfClass("Frame")
+
+				if frame then
+					-- دور على TextLabel جوا الفريم
+					local textLabel = frame:FindFirstChildOfClass("TextLabel")
+
+					if textLabel and textLabel:IsA("TextLabel") then
+						print("TextLabel Text: " .. textLabel.Text)
+					else
+						warn("TextLabel not found!")
+					end
+				else
+					warn("Frame not found inside SurfaceGui!")
+				end
+			else
+				warn("SurfaceGui not found inside PlotSign!")
+			end
+		else
+			warn("PlotSign not found in selected model!")
+		end
+	else
+		warn("No models found in Plots folder!")
+	end
+else
+	warn("Plots folder not found in workspace!")
+end
