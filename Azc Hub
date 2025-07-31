@@ -24,22 +24,34 @@ if PlotsFolder and PlotsFolder:IsA("Folder") then
 						local labelText = textLabel.Text
 						print("TextLabel Text: " .. labelText)
 
-						-- 🔥 إنشاء BillboardGui لعرض النص
-						local billboard = Instance.new("BillboardGui")
-						billboard.Name = "ESPLabel"
-						billboard.Size = UDim2.new(0, 200, 0, 50)
-						billboard.StudsOffset = Vector3.new(0, 5, 0)
-						billboard.Adornee = selectedModel:FindFirstChildWhichIsA("BasePart") -- نربطه بأقرب بارت
-						billboard.AlwaysOnTop = true
-						billboard.Parent = selectedModel
+						-- 🧱 نضيف Part جديد جنب الموديل
+						local displayPart = Instance.new("Part")
+						displayPart.Name = "TextDisplay"
+						displayPart.Size = Vector3.new(1, 1, 1)
+						displayPart.Transparency = 1
+						displayPart.Anchored = true
+						displayPart.CanCollide = false
+						displayPart.Position = selectedModel:GetModelCFrame().p + Vector3.new(5, 5, 0) -- جنب الموديل
+						displayPart.Parent = workspace
 
-						-- 💬 إنشاء TextLabel داخل الـ BillboardGui
+						-- 📋 BillboardGui
+						local billboard = Instance.new("BillboardGui")
+						billboard.Name = "DisplayGui"
+						billboard.Size = UDim2.new(0, 300, 0, 100)
+						billboard.StudsOffset = Vector3.new(0, 2, 0)
+						billboard.Adornee = displayPart
+						billboard.AlwaysOnTop = true
+						billboard.Parent = displayPart
+
+						-- 💬 TextLabel
 						local label = Instance.new("TextLabel")
 						label.Size = UDim2.new(1, 0, 1, 0)
-						label.BackgroundTransparency = 1
+						label.BackgroundTransparency = 0.2
+						label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 						label.Text = labelText
 						label.TextColor3 = Color3.new(1, 1, 1)
-						label.TextStrokeTransparency = 0.5
+						label.TextStrokeColor3 = Color3.new(0, 0, 0)
+						label.TextStrokeTransparency = 0
 						label.TextScaled = true
 						label.Font = Enum.Font.GothamBold
 						label.Parent = billboard
