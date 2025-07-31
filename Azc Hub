@@ -2,38 +2,40 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- واجهة بسيطة فيها TextBox لكتابة اسم اللاعب
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "TargetSelectorGui"
-screenGui.Parent = PlayerGui
+-- واجهة GUI
+local screenGui = Instance.new("ScreenGui", PlayerGui)
+screenGui.ResetOnSpawn = false
+screenGui.Name = "ESP_TargetGui"
 
-local textBox = Instance.new("TextBox")
-textBox.Size = UDim2.new(0, 200, 0, 30)
-textBox.Position = UDim2.new(0.5, -100, 0.1, 0)
-textBox.PlaceholderText = "Enter Username"
-textBox.Text = ""
-textBox.Font = Enum.Font.GothamBold
-textBox.TextSize = 16
-textBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-textBox.TextColor3 = Color3.new(1, 1, 1)
-textBox.ClearTextOnFocus = false
-textBox.Parent = screenGui
+local inputBox = Instance.new("TextBox")
+inputBox.Size = UDim2.new(0, 200, 0, 35)
+inputBox.Position = UDim2.new(0.5, -100, 0, 30)
+inputBox.PlaceholderText = "Enter Username"
+inputBox.Text = ""
+inputBox.Font = Enum.Font.GothamBold
+inputBox.TextSize = 18
+inputBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+inputBox.TextColor3 = Color3.new(1, 1, 1)
+inputBox.ClearTextOnFocus = false
+inputBox.Parent = screenGui
 
+-- دالة لاستخراج DisplayName من النص
 local function extractDisplayName(text)
-	return string.match(text, "^(.-)'s Base$")
+	return string.match(text, "^(.-)'s Base$") or text
 end
 
-local function createESP(targetDisplayName, model)
+-- دالة إنشاء ESP
+local function createESP(model)
 	local part = Instance.new("Part")
 	part.Anchored = true
 	part.CanCollide = false
 	part.Transparency = 1
-	part.Size = Vector3.new(0.5, 0.5, 0.5)
-	part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
+	part.Size = Vector3.new(1, 1, 1)
+	part.Position = model:GetModelCFrame().Position + Vector3.new(0, 6, 0)
 	part.Parent = workspace
 
 	local billboard = Instance.new("BillboardGui")
-	billboard.Size = UDim2.new(0, 150, 0, 30)
+	billboard.Size = UDim2.new(0, 150, 0, 40)
 	billboard.StudsOffset = Vector3.new(0, 1.5, 0)
 	billboard.AlwaysOnTop = true
 	billboard.Adornee = part
@@ -43,53 +45,34 @@ local function createESP(targetDisplayName, model)
 	label.Size = UDim2.new(1, 0, 1, 0)
 	label.BackgroundTransparency = 1
 	label.TextColor3 = Color3.new(1, 1, 0)
-	label.TextStrokeColor3 = Color3.new(0, 0, 0)
 	label.TextStrokeTransparency = 0.2
-	label.TextScaled = true
 	label.Font = Enum.Font.GothamBold
+	label.TextScaled = true
 	label.Text = "Target's Base"
 	label.Parent = billboard
-
-	-- تحديث الاسم لو اتغير
-	task.spawn(function()
-		local textLabel
-		local surfaceGui = model:FindFirstChild("PlotSign"):FindFirstChildWhichIsA("SurfaceGui")
-		if surfaceGui then
-			local frame = surfaceGui:FindFirstChildWhichIsA("Frame")
-			if frame then
-				textLabel = frame:FindFirstChildWhichIsA("TextLabel")
-			end
-		end
-
-		while true do
-			if textLabel then
-				local currentName = extractDisplayName(textLabel.Text)
-				if currentName == targetDisplayName then
-					label.Text = "Target's Base"
-				else
-					label.Text = ""
-				end
-			end
-			task.wait(0.5)
-		end
-	end)
 end
 
--- لما اللاعب يكتب اسم ويضغط Enter
-textBox.FocusLost:Connect(function(enterPressed)
+-- عند الضغط على Enter بعد كتابة اليوزرنيم
+inputBox.FocusLost:Connect(function(enterPressed)
 	if not enterPressed then return end
-	local username = textBox.Text
+
+	local username = inputBox.Text
 	local targetPlayer = Players:FindFirstChild(username)
 
 	if not targetPlayer then
-		warn("Player not found!")
-		textBox.PlaceholderText = "❌ Player not online"
-		textBox.Text = ""
+		inputBox.PlaceholderText = "❌ Player not found"
+		inputBox.Text = ""
 		return
 	end
 
 	local targetDisplayName = targetPlayer.DisplayName
-	local PlotsFolder = workspace:WaitForChild("Plots")
+	local PlotsFolder = workspace:FindFirstChild("Plots")
+	if not PlotsFolder then
+		warn("❌ No Plots folder in workspace")
+		return
+	end
+
+	local found = false
 
 	for _, model in ipairs(PlotsFolder:GetChildren()) do
 		if model:IsA("Model") then
@@ -101,11 +84,10 @@ textBox.FocusLost:Connect(function(enterPressed)
 					if frame then
 						local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
 						if textLabel then
-							local nameOnSign = extractDisplayName(textLabel.Text)
-							if nameOnSign == targetDisplayName then
-								createESP(targetDisplayName, model)
-								textBox.PlaceholderText = "✅ Target found!"
-								textBox.Text = ""
+							local name = extractDisplayName(textLabel.Text)
+							if name == targetDisplayName then
+								createESP(model)
+								found = true
 								break
 							end
 						end
@@ -114,4 +96,11 @@ textBox.FocusLost:Connect(function(enterPressed)
 			end
 		end
 	end
+
+	if found then
+		inputBox.PlaceholderText = "✅ Target Found"
+	else
+		inputBox.PlaceholderText = "❌ No Base Found"
+	end
+	inputBox.Text = ""
 end)
