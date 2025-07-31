@@ -1,65 +1,20 @@
-local PlotsFolder = workspace:WaitForChild("Plots")
-local RunService = game:GetService("RunService")
+local plot = workspace.Plots:FindFirstChild("Plot1") -- أو أي موديل تعرفه
 
-local ESPs = {}
-
-for _, model in ipairs(PlotsFolder:GetChildren()) do
-	if model:IsA("Model") then
-		local plotSign = model:FindFirstChild("PlotSign")
-
-		if plotSign and plotSign:IsA("BasePart") then
-			local surfaceGui = plotSign:FindFirstChildWhichIsA("SurfaceGui")
-			if surfaceGui then
-				local frame = surfaceGui:FindFirstChildWhichIsA("Frame")
-				if frame then
-					local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
-					if textLabel then
-						-- Create invisible part
-						local part = Instance.new("Part")
-						part.Anchored = true
-						part.CanCollide = false
-						part.Transparency = 1
-						part.Size = Vector3.new(0.5, 0.5, 0.5)
-						part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
-						part.Parent = workspace
-
-						-- BillboardGui
-						local billboard = Instance.new("BillboardGui")
-						billboard.Size = UDim2.new(0, 200, 0, 50)
-						billboard.StudsOffset = Vector3.new(0, 1.5, 0)
-						billboard.AlwaysOnTop = true
-						billboard.Adornee = part
-						billboard.Parent = part
-
-						local label = Instance.new("TextLabel")
-						label.Size = UDim2.new(1, 0, 1, 0)
-						label.BackgroundTransparency = 1
-						label.TextColor3 = Color3.new(1, 1, 1)
-						label.TextStrokeColor3 = Color3.new(0, 0, 0)
-						label.TextStrokeTransparency = 0
-						label.TextScaled = true
-						label.Font = Enum.Font.GothamBold
-						label.Text = textLabel.Text
-						label.Parent = billboard
-
-						-- Store for updates
-						table.insert(ESPs, {
-							textLabel = textLabel,
-							label = label
-						})
+if plot then
+	local sign = plot:FindFirstChild("PlotSign")
+	if sign then
+		local gui = sign:FindFirstChildWhichIsA("SurfaceGui")
+		if gui then
+			local frame = gui:FindFirstChildWhichIsA("Frame")
+			if frame then
+				local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
+				if textLabel then
+					while true do
+						print("DEBUG TEXT:", textLabel.Text)
+						wait(1)
 					end
 				end
 			end
 		end
 	end
-end
-
--- Update every 0.5s
-while true do
-	for _, esp in ipairs(ESPs) do
-		if esp.textLabel and esp.label then
-			esp.label.Text = esp.textLabel.Text
-		end
-	end
-	wait(0.5)
 end
