@@ -1,10 +1,9 @@
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local playerDisplayName = LocalPlayer and LocalPlayer.DisplayName or "Unknown"
+local playerName = LocalPlayer and LocalPlayer.Name or "Unknown"
 
 local PlotsFolder = workspace:WaitForChild("Plots")
 
--- البحث عن بيت اللاعب فقط
 for _, model in ipairs(PlotsFolder:GetChildren()) do
 	if model:IsA("Model") then
 		local plotSign = model:FindFirstChild("PlotSign")
@@ -15,13 +14,10 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 				if frame then
 					local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
 					if textLabel then
-						local function isPlayerBase(text)
-							local nameOnly = string.match(text, "^(.-)'s Base$")
-							return nameOnly == playerDisplayName
-						end
-
-						if isPlayerBase(textLabel.Text) then
-							-- Create invisible part above player base
+						-- نحاول نجيب اسم اللاعب من النص
+						local nameOnly = string.match(textLabel.Text, "^(.-)'s Base$")
+						if nameOnly == playerName then
+							-- Create invisible part
 							local part = Instance.new("Part")
 							part.Anchored = true
 							part.CanCollide = false
@@ -30,7 +26,6 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 							part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
 							part.Parent = workspace
 
-							-- BillboardGui
 							local billboard = Instance.new("BillboardGui")
 							billboard.Size = UDim2.new(0, 150, 0, 30)
 							billboard.StudsOffset = Vector3.new(0, 1.5, 0)
@@ -46,16 +41,16 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 							label.TextStrokeTransparency = 0.2
 							label.TextScaled = true
 							label.Font = Enum.Font.GothamBold
-							label.Text = playerDisplayName .. " (Your Base)"
+							label.Text = playerName .. " (Your Base)"
 							label.Parent = billboard
 
-							-- تحديث الاسم باستمرار
+							-- تحديث الاسم لو اتغير
 							while true do
 								if textLabel and label then
 									local currentText = textLabel.Text
-									local nameOnly = string.match(currentText, "^(.-)'s Base$")
-									if nameOnly == playerDisplayName then
-										label.Text = playerDisplayName .. " (Your Base)"
+									local updatedName = string.match(currentText, "^(.-)'s Base$")
+									if updatedName == playerName then
+										label.Text = playerName .. " (Your Base)"
 									else
 										label.Text = currentText
 									end
