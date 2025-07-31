@@ -1,6 +1,6 @@
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local playerName = LocalPlayer and LocalPlayer.Name or "Unknown"
+local displayName = LocalPlayer and LocalPlayer.DisplayName or "Unknown"
 
 local PlotsFolder = workspace:WaitForChild("Plots")
 
@@ -14,10 +14,15 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 				if frame then
 					local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
 					if textLabel then
-						-- نحاول نجيب اسم اللاعب من النص
-						local nameOnly = string.match(textLabel.Text, "^(.-)'s Base$")
-						if nameOnly == playerName then
-							-- Create invisible part
+						local function extractDisplayName(text)
+							-- لو النص مكتوب بالشكل: "Zeko's Base"
+							return string.match(text, "^(.-)'s Base$")
+						end
+
+						local extractedName = extractDisplayName(textLabel.Text)
+
+						if extractedName == displayName then
+							-- Create invisible part above the house
 							local part = Instance.new("Part")
 							part.Anchored = true
 							part.CanCollide = false
@@ -26,6 +31,7 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 							part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
 							part.Parent = workspace
 
+							-- BillboardGui
 							local billboard = Instance.new("BillboardGui")
 							billboard.Size = UDim2.new(0, 150, 0, 30)
 							billboard.StudsOffset = Vector3.new(0, 1.5, 0)
@@ -41,22 +47,21 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 							label.TextStrokeTransparency = 0.2
 							label.TextScaled = true
 							label.Font = Enum.Font.GothamBold
-							label.Text = playerName .. " (Your Base)"
+							label.Text = "Your Base"
 							label.Parent = billboard
 
-							-- تحديث الاسم لو اتغير
-							while true do
-								if textLabel and label then
-									local currentText = textLabel.Text
-									local updatedName = string.match(currentText, "^(.-)'s Base$")
-									if updatedName == playerName then
-										label.Text = playerName .. " (Your Base)"
+							-- تحديث كل نص ثانية
+							task.spawn(function()
+								while true do
+									local currentExtracted = extractDisplayName(textLabel.Text)
+									if currentExtracted == displayName then
+										label.Text = "Your Base"
 									else
-										label.Text = currentText
+										label.Text = ""
 									end
+									task.wait(0.5)
 								end
-								wait(0.5)
-							end
+							end)
 						end
 					end
 				end
