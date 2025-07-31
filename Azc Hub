@@ -1,68 +1,12 @@
-local PlotsFolder = workspace:WaitForChild("Plots")
-local RunService = game:GetService("RunService")
-
-local ESPs = {}
-
-for _, model in ipairs(PlotsFolder:GetChildren()) do
-	if model:IsA("Model") then
-		local plotSign = model:FindFirstChild("PlotSign")
-
-		if plotSign and plotSign:IsA("BasePart") then
-			local surfaceGui = plotSign:FindFirstChildWhichIsA("SurfaceGui")
-			if surfaceGui then
-				local frame = surfaceGui:FindFirstChildWhichIsA("Frame")
-				if frame then
-					local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
-					if textLabel then
-						-- Create invisible part
-						local part = Instance.new("Part")
-						part.Anchored = true
-						part.CanCollide = false
-						part.Transparency = 1
-						part.Size = Vector3.new(0.5, 0.5, 0.5)
-						part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
-						part.Name = "ESP_Part_" .. model.Name
-						part.Parent = workspace
-
-						-- BillboardGui
-						local billboard = Instance.new("BillboardGui")
-						billboard.Size = UDim2.new(0, 150, 0, 30) -- أصغر شوية
-						billboard.StudsOffset = Vector3.new(0, 1.5, 0)
-						billboard.AlwaysOnTop = true
-						billboard.Adornee = part
-						billboard.Name = "ESP_Billboard_" .. model.Name
-						billboard.Parent = part
-
-						-- TextLabel
-						local label = Instance.new("TextLabel")
-						label.Size = UDim2.new(1, 0, 1, 0)
-						label.BackgroundTransparency = 1 -- مفيش خلفية خالص
-						label.TextColor3 = Color3.new(1, 1, 1)
-						label.TextStrokeColor3 = Color3.new(0, 0, 0)
-						label.TextStrokeTransparency = 0.2 -- تظليل خفيف
-						label.TextScaled = true
-						label.Font = Enum.Font.GothamBold
-						label.Text = textLabel.Text
-						label.Parent = billboard
-
-						-- Store for updates
-						table.insert(ESPs, {
-							textLabel = textLabel,
-							label = label
-						})
-					end
-				end
-			end
-		end
+local originalText = esp.textLabel.Text
+if originalText ~= "Empty Base" then
+	-- شيل 's Base من آخر النص
+	local nameOnly = originalText:match("^(.-)'s Base$")
+	if nameOnly then
+		esp.label.Text = nameOnly
+	else
+		esp.label.Text = originalText -- fallback لو الشكل مختلف
 	end
-end
-
--- تحديث كل 0.5 ثانية
-while true do
-	for _, esp in ipairs(ESPs) do
-		if esp.textLabel and esp.label then
-			esp.label.Text = esp.textLabel.Text
-		end
-	end
-	wait(0.5)
+else
+	esp.label.Text = originalText
 end
