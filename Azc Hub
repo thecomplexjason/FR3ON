@@ -1,7 +1,7 @@
 local PlotsFolder = workspace:FindFirstChild("Plots")
 
 if not PlotsFolder or not PlotsFolder:IsA("Folder") then
-	warn("Plots folder not found or invalid!")
+	warn("❌ Plots folder not found!")
 	return
 end
 
@@ -16,51 +16,49 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 				if frame then
 					local textLabel = frame:FindFirstChildOfClass("TextLabel")
 					if textLabel and textLabel:IsA("TextLabel") then
-						local labelText = textLabel.Text
-						print("✅ Model:", model.Name, "Text:", labelText)
-
-						-- 🧱 نضيف Part شفاف لعرض اللوحة
+						-- 🧱 Part شفاف لوضع اللوحة
 						local displayPart = Instance.new("Part")
 						displayPart.Name = "TextDisplay"
 						displayPart.Size = Vector3.new(0.5, 0.5, 0.5)
 						displayPart.Transparency = 1
 						displayPart.Anchored = true
 						displayPart.CanCollide = false
-						displayPart.Position = model:GetModelCFrame().p + Vector3.new(4, 4, 0)
+						displayPart.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
 						displayPart.Parent = workspace
 
 						-- 📋 BillboardGui
 						local billboard = Instance.new("BillboardGui")
-						billboard.Name = "DisplayGui"
+						billboard.Name = "ESPDisplay"
 						billboard.Size = UDim2.new(0, 200, 0, 50)
 						billboard.StudsOffset = Vector3.new(0, 1.5, 0)
 						billboard.Adornee = displayPart
 						billboard.AlwaysOnTop = true
 						billboard.Parent = displayPart
 
-						-- 💬 TextLabel جوا اللوحة
+						-- 💬 TextLabel (شفاف)
 						local label = Instance.new("TextLabel")
 						label.Size = UDim2.new(1, 0, 1, 0)
-						label.BackgroundTransparency = 0.2
-						label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-						label.Text = labelText
+						label.BackgroundTransparency = 1 -- شفافية كاملة
 						label.TextColor3 = Color3.new(1, 1, 1)
 						label.TextStrokeColor3 = Color3.new(0, 0, 0)
 						label.TextStrokeTransparency = 0
 						label.TextScaled = true
 						label.Font = Enum.Font.GothamBold
+						label.Text = textLabel.Text
 						label.Parent = billboard
-					else
-						warn("TextLabel missing in model: " .. model.Name)
+
+						-- 🔁 تحديث تلقائي لو النص اتغير
+						textLabel:GetPropertyChangedSignal("Text"):Connect(function()
+							label.Text = textLabel.Text
+						end)
+
+						-- 📛 (اختياري) لو عايز تعرض اسم الموديل بدلًا من TextLabel
+						-- model:GetPropertyChangedSignal("Name"):Connect(function()
+						--     label.Text = model.Name
+						-- end)
 					end
-				else
-					warn("Frame missing in model: " .. model.Name)
 				end
-			else
-				warn("SurfaceGui missing in model: " .. model.Name)
 			end
-		else
-			warn("PlotSign missing or not a part in model: " .. model.Name)
 		end
 	end
 end
