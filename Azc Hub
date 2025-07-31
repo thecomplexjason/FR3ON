@@ -5,6 +5,9 @@ if not PlotsFolder or not PlotsFolder:IsA("Folder") then
 	return
 end
 
+-- 🧠 جدول يخزن التوصيلات
+local ESPMap = {}
+
 for _, model in ipairs(PlotsFolder:GetChildren()) do
 	if model:IsA("Model") then
 		local plotSign = model:FindFirstChild("PlotSign")
@@ -16,7 +19,7 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 				if frame then
 					local textLabel = frame:FindFirstChildOfClass("TextLabel")
 					if textLabel and textLabel:IsA("TextLabel") then
-						-- 🧱 Part شفاف للعرض
+						-- 🧱 Create ESP part
 						local displayPart = Instance.new("Part")
 						displayPart.Name = "TextDisplay"
 						displayPart.Size = Vector3.new(0.5, 0.5, 0.5)
@@ -35,7 +38,7 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 						billboard.AlwaysOnTop = true
 						billboard.Parent = displayPart
 
-						-- 💬 TextLabel شفاف
+						-- 💬 TextLabel
 						local label = Instance.new("TextLabel")
 						label.Size = UDim2.new(1, 0, 1, 0)
 						label.BackgroundTransparency = 1
@@ -47,18 +50,26 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 						label.Text = textLabel.Text
 						label.Parent = billboard
 
-						-- 🔁 تحديث كل 0.5 ثانية
-						task.spawn(function()
-							while true do
-								if textLabel and label then
-									label.Text = textLabel.Text
-								end
-								task.wait(0.5)
-							end
-						end)
+						-- 🔁 Store connection
+						table.insert(ESPMap, {
+							textLabel = textLabel,
+							label = label
+						})
 					end
 				end
 			end
 		end
 	end
 end
+
+-- 🕒 تحديث كل 0.5 ثانية
+task.spawn(function()
+	while true do
+		for _, esp in ipairs(ESPMap) do
+			if esp.textLabel and esp.label then
+				esp.label.Text = esp.textLabel.Text
+			end
+		end
+		task.wait(0.5)
+	end
+end)
