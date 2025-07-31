@@ -3,73 +3,59 @@ local PlotsFolder = workspace:FindFirstChild("Plots")
 if PlotsFolder and PlotsFolder:IsA("Folder") then
 	local models = PlotsFolder:GetChildren()
 
-	if #models > 0 then
-		local randomIndex = math.random(1, #models)
-		local selectedModel = models[randomIndex]
+	for _, model in ipairs(models) do
+		if model:IsA("Model") then
+			local plotSign = model:FindFirstChild("PlotSign")
 
-		print("Selected Model: " .. selectedModel.Name)
+			if plotSign and plotSign:IsA("BasePart") then
+				local surfaceGui = plotSign:FindFirstChildOfClass("SurfaceGui")
 
-		local plotSign = selectedModel:FindFirstChild("PlotSign")
+				if surfaceGui then
+					local frame = surfaceGui:FindFirstChildOfClass("Frame")
 
-		if plotSign and plotSign:IsA("BasePart") then
-			local surfaceGui = plotSign:FindFirstChildOfClass("SurfaceGui")
+					if frame then
+						local textLabel = frame:FindFirstChildOfClass("TextLabel")
 
-			if surfaceGui then
-				local frame = surfaceGui:FindFirstChildOfClass("Frame")
+						if textLabel and textLabel:IsA("TextLabel") then
+							local labelText = textLabel.Text
+							print("Model:", model.Name, "→", labelText)
 
-				if frame then
-					local textLabel = frame:FindFirstChildOfClass("TextLabel")
+							-- 🧱 Part شفاف صغير جنب الموديل
+							local displayPart = Instance.new("Part")
+							displayPart.Name = "TextDisplay"
+							displayPart.Size = Vector3.new(0.5, 0.5, 0.5) -- صغير
+							displayPart.Transparency = 1
+							displayPart.Anchored = true
+							displayPart.CanCollide = false
+							displayPart.Position = model:GetModelCFrame().p + Vector3.new(4, 4, 0)
+							displayPart.Parent = workspace
 
-					if textLabel and textLabel:IsA("TextLabel") then
-						local labelText = textLabel.Text
-						print("TextLabel Text: " .. labelText)
+							-- 📋 BillboardGui
+							local billboard = Instance.new("BillboardGui")
+							billboard.Name = "DisplayGui"
+							billboard.Size = UDim2.new(0, 200, 0, 50) -- أصغر
+							billboard.StudsOffset = Vector3.new(0, 1.5, 0)
+							billboard.Adornee = displayPart
+							billboard.AlwaysOnTop = true
+							billboard.Parent = displayPart
 
-						-- 🧱 نضيف Part جديد جنب الموديل
-						local displayPart = Instance.new("Part")
-						displayPart.Name = "TextDisplay"
-						displayPart.Size = Vector3.new(1, 1, 1)
-						displayPart.Transparency = 1
-						displayPart.Anchored = true
-						displayPart.CanCollide = false
-						displayPart.Position = selectedModel:GetModelCFrame().p + Vector3.new(5, 5, 0) -- جنب الموديل
-						displayPart.Parent = workspace
-
-						-- 📋 BillboardGui
-						local billboard = Instance.new("BillboardGui")
-						billboard.Name = "DisplayGui"
-						billboard.Size = UDim2.new(0, 300, 0, 100)
-						billboard.StudsOffset = Vector3.new(0, 2, 0)
-						billboard.Adornee = displayPart
-						billboard.AlwaysOnTop = true
-						billboard.Parent = displayPart
-
-						-- 💬 TextLabel
-						local label = Instance.new("TextLabel")
-						label.Size = UDim2.new(1, 0, 1, 0)
-						label.BackgroundTransparency = 0.2
-						label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-						label.Text = labelText
-						label.TextColor3 = Color3.new(1, 1, 1)
-						label.TextStrokeColor3 = Color3.new(0, 0, 0)
-						label.TextStrokeTransparency = 0
-						label.TextScaled = true
-						label.Font = Enum.Font.GothamBold
-						label.Parent = billboard
-
-					else
-						warn("TextLabel not found!")
+							-- 💬 TextLabel
+							local label = Instance.new("TextLabel")
+							label.Size = UDim2.new(1, 0, 1, 0)
+							label.BackgroundTransparency = 0.2
+							label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+							label.Text = labelText
+							label.TextColor3 = Color3.new(1, 1, 1)
+							label.TextStrokeColor3 = Color3.new(0, 0, 0)
+							label.TextStrokeTransparency = 0
+							label.TextScaled = true
+							label.Font = Enum.Font.GothamBold
+							label.Parent = billboard
+						end
 					end
-				else
-					warn("Frame not found inside SurfaceGui!")
 				end
-			else
-				warn("SurfaceGui not found inside PlotSign!")
 			end
-		else
-			warn("PlotSign not found in selected model!")
 		end
-	else
-		warn("No models found in Plots folder!")
 	end
 else
 	warn("Plots folder not found in workspace!")
