@@ -2,10 +2,10 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- واجهة GUI
+-- GUI لإدخال اسم اللاعب
 local screenGui = Instance.new("ScreenGui", PlayerGui)
+screenGui.Name = "TargetGui"
 screenGui.ResetOnSpawn = false
-screenGui.Name = "ESP_TargetGui"
 
 local inputBox = Instance.new("TextBox")
 inputBox.Size = UDim2.new(0, 200, 0, 35)
@@ -19,13 +19,13 @@ inputBox.TextColor3 = Color3.new(1, 1, 1)
 inputBox.ClearTextOnFocus = false
 inputBox.Parent = screenGui
 
--- دالة لاستخراج DisplayName من النص
+-- دالة استخراج DisplayName من النص
 local function extractDisplayName(text)
 	return string.match(text, "^(.-)'s Base$") or text
 end
 
--- دالة إنشاء ESP
-local function createESP(model)
+-- دالة عمل ESP بصورة الأفاتار
+local function createESP(model, imageId)
 	local part = Instance.new("Part")
 	part.Anchored = true
 	part.CanCollide = false
@@ -35,21 +35,17 @@ local function createESP(model)
 	part.Parent = workspace
 
 	local billboard = Instance.new("BillboardGui")
-	billboard.Size = UDim2.new(0, 150, 0, 40)
-	billboard.StudsOffset = Vector3.new(0, 1.5, 0)
+	billboard.Size = UDim2.new(0, 150, 0, 150)
+	billboard.StudsOffset = Vector3.new(0, 2, 0)
 	billboard.AlwaysOnTop = true
 	billboard.Adornee = part
 	billboard.Parent = part
 
-	local label = Instance.new("TextLabel")
-	label.Size = UDim2.new(1, 0, 1, 0)
-	label.BackgroundTransparency = 1
-	label.TextColor3 = Color3.new(1, 1, 0)
-	label.TextStrokeTransparency = 0.2
-	label.Font = Enum.Font.GothamBold
-	label.TextScaled = true
-	label.Text = "Target's Base"
-	label.Parent = billboard
+	local imageLabel = Instance.new("ImageLabel")
+	imageLabel.Size = UDim2.new(1, 0, 1, 0)
+	imageLabel.BackgroundTransparency = 1
+	imageLabel.Image = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. imageId .. "&width=150&height=150&format=png"
+	imageLabel.Parent = billboard
 end
 
 -- عند الضغط على Enter بعد كتابة اليوزرنيم
@@ -66,9 +62,11 @@ inputBox.FocusLost:Connect(function(enterPressed)
 	end
 
 	local targetDisplayName = targetPlayer.DisplayName
+	local targetUserId = targetPlayer.UserId
 	local PlotsFolder = workspace:FindFirstChild("Plots")
+
 	if not PlotsFolder then
-		warn("❌ No Plots folder in workspace")
+		warn("❌ No Plots folder found")
 		return
 	end
 
@@ -84,9 +82,11 @@ inputBox.FocusLost:Connect(function(enterPressed)
 					if frame then
 						local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
 						if textLabel then
-							local name = extractDisplayName(textLabel.Text)
-							if name == targetDisplayName then
-								createESP(model)
+							local extractedName = extractDisplayName(textLabel.Text)
+
+							-- تجاهل بيت اللاعب المحلي
+							if extractedName == targetDisplayName and extractedName ~= LocalPlayer.DisplayName then
+								createESP(model, targetUserId)
 								found = true
 								break
 							end
@@ -98,7 +98,7 @@ inputBox.FocusLost:Connect(function(enterPressed)
 	end
 
 	if found then
-		inputBox.PlaceholderText = "✅ Target Found"
+		inputBox.PlaceholderText = "✅ Target Marked"
 	else
 		inputBox.PlaceholderText = "❌ No Base Found"
 	end
