@@ -1,14 +1,14 @@
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
-local PlotsFolder = workspace:WaitForChild("Plots")
-
 local playerDisplayName = LocalPlayer and LocalPlayer.DisplayName or "Unknown"
+
+local PlotsFolder = workspace:WaitForChild("Plots")
 local ESPs = {}
 
 for _, model in ipairs(PlotsFolder:GetChildren()) do
 	if model:IsA("Model") then
 		local plotSign = model:FindFirstChild("PlotSign")
-
 		if plotSign and plotSign:IsA("BasePart") then
 			local surfaceGui = plotSign:FindFirstChildWhichIsA("SurfaceGui")
 			if surfaceGui then
@@ -16,26 +16,21 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 				if frame then
 					local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
 					if textLabel then
-						-- Create invisible part above model
 						local part = Instance.new("Part")
 						part.Anchored = true
 						part.CanCollide = false
 						part.Transparency = 1
 						part.Size = Vector3.new(0.5, 0.5, 0.5)
 						part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
-						part.Name = "ESP_Part_" .. model.Name
 						part.Parent = workspace
 
-						-- BillboardGui setup
 						local billboard = Instance.new("BillboardGui")
 						billboard.Size = UDim2.new(0, 150, 0, 30)
 						billboard.StudsOffset = Vector3.new(0, 1.5, 0)
 						billboard.AlwaysOnTop = true
 						billboard.Adornee = part
-						billboard.Name = "ESP_Billboard_" .. model.Name
 						billboard.Parent = part
 
-						-- TextLabel inside BillboardGui
 						local label = Instance.new("TextLabel")
 						label.Size = UDim2.new(1, 0, 1, 0)
 						label.BackgroundTransparency = 1
@@ -47,7 +42,6 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 						label.Text = ""
 						label.Parent = billboard
 
-						-- Store references for update
 						table.insert(ESPs, {
 							textLabel = textLabel,
 							label = label
@@ -59,7 +53,7 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 	end
 end
 
--- Update ESP text every 0.5 seconds
+-- تحديث كل 0.5 ثانية
 while true do
 	for _, esp in ipairs(ESPs) do
 		if esp.textLabel and esp.label then
