@@ -1,44 +1,36 @@
-local PlotsFolder = workspace:FindFirstChild("Plots")
+local PlotsFolder = workspace:WaitForChild("Plots")
+local RunService = game:GetService("RunService")
 
-if not PlotsFolder or not PlotsFolder:IsA("Folder") then
-	warn("❌ Plots folder not found!")
-	return
-end
-
--- 🧠 جدول يخزن التوصيلات
-local ESPMap = {}
+local ESPs = {}
 
 for _, model in ipairs(PlotsFolder:GetChildren()) do
 	if model:IsA("Model") then
 		local plotSign = model:FindFirstChild("PlotSign")
 
 		if plotSign and plotSign:IsA("BasePart") then
-			local surfaceGui = plotSign:FindFirstChildOfClass("SurfaceGui")
+			local surfaceGui = plotSign:FindFirstChildWhichIsA("SurfaceGui")
 			if surfaceGui then
-				local frame = surfaceGui:FindFirstChildOfClass("Frame")
+				local frame = surfaceGui:FindFirstChildWhichIsA("Frame")
 				if frame then
-					local textLabel = frame:FindFirstChildOfClass("TextLabel")
-					if textLabel and textLabel:IsA("TextLabel") then
-						-- 🧱 Create ESP part
-						local displayPart = Instance.new("Part")
-						displayPart.Name = "TextDisplay"
-						displayPart.Size = Vector3.new(0.5, 0.5, 0.5)
-						displayPart.Transparency = 1
-						displayPart.Anchored = true
-						displayPart.CanCollide = false
-						displayPart.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
-						displayPart.Parent = workspace
+					local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
+					if textLabel then
+						-- Create invisible part
+						local part = Instance.new("Part")
+						part.Anchored = true
+						part.CanCollide = false
+						part.Transparency = 1
+						part.Size = Vector3.new(0.5, 0.5, 0.5)
+						part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
+						part.Parent = workspace
 
-						-- 📋 BillboardGui
+						-- BillboardGui
 						local billboard = Instance.new("BillboardGui")
-						billboard.Name = "ESPDisplay"
 						billboard.Size = UDim2.new(0, 200, 0, 50)
 						billboard.StudsOffset = Vector3.new(0, 1.5, 0)
-						billboard.Adornee = displayPart
 						billboard.AlwaysOnTop = true
-						billboard.Parent = displayPart
+						billboard.Adornee = part
+						billboard.Parent = part
 
-						-- 💬 TextLabel
 						local label = Instance.new("TextLabel")
 						label.Size = UDim2.new(1, 0, 1, 0)
 						label.BackgroundTransparency = 1
@@ -50,8 +42,8 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 						label.Text = textLabel.Text
 						label.Parent = billboard
 
-						-- 🔁 Store connection
-						table.insert(ESPMap, {
+						-- Store for updates
+						table.insert(ESPs, {
 							textLabel = textLabel,
 							label = label
 						})
@@ -62,14 +54,12 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 	end
 end
 
--- 🕒 تحديث كل 0.5 ثانية
-task.spawn(function()
-	while true do
-		for _, esp in ipairs(ESPMap) do
-			if esp.textLabel and esp.label then
-				esp.label.Text = esp.textLabel.Text
-			end
+-- Update every 0.5s
+while true do
+	for _, esp in ipairs(ESPs) do
+		if esp.textLabel and esp.label then
+			esp.label.Text = esp.textLabel.Text
 		end
-		task.wait(0.5)
 	end
-end)
+	wait(0.5)
+end
