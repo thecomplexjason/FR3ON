@@ -12,7 +12,7 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 				if frame then
 					local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
 					if textLabel then
-						-- Create invisible part
+						-- Create invisible part above model
 						local part = Instance.new("Part")
 						part.Anchored = true
 						part.CanCollide = false
@@ -22,7 +22,7 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 						part.Name = "ESP_Part_" .. model.Name
 						part.Parent = workspace
 
-						-- BillboardGui
+						-- BillboardGui setup
 						local billboard = Instance.new("BillboardGui")
 						billboard.Size = UDim2.new(0, 150, 0, 30)
 						billboard.StudsOffset = Vector3.new(0, 1.5, 0)
@@ -31,6 +31,7 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 						billboard.Name = "ESP_Billboard_" .. model.Name
 						billboard.Parent = part
 
+						-- TextLabel inside BillboardGui
 						local label = Instance.new("TextLabel")
 						label.Size = UDim2.new(1, 0, 1, 0)
 						label.BackgroundTransparency = 1
@@ -42,7 +43,7 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 						label.Text = ""
 						label.Parent = billboard
 
-						-- Store for updates
+						-- Store references for update
 						table.insert(ESPs, {
 							textLabel = textLabel,
 							label = label
@@ -54,7 +55,7 @@ for _, model in ipairs(PlotsFolder:GetChildren()) do
 	end
 end
 
--- Update every 0.5s
+-- Update ESP text every 0.5 seconds
 while true do
 	for _, esp in ipairs(ESPs) do
 		if esp.textLabel and esp.label then
@@ -62,8 +63,8 @@ while true do
 			if originalText == "Empty Base" then
 				esp.label.Text = "Empty Base"
 			else
-				local nameOnly = originalText:match("^(.-)'s Base$")
-				if nameOnly then
+				local nameOnly = string.match(originalText, "^(.-)'s Base$")
+				if nameOnly and nameOnly ~= "" then
 					esp.label.Text = nameOnly
 				else
 					esp.label.Text = originalText
