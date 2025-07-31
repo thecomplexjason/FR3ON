@@ -1,34 +1,49 @@
 local PlotsFolder = workspace:FindFirstChild("Plots")
 
 if PlotsFolder and PlotsFolder:IsA("Folder") then
-	-- احصل على كل الموديلات جوا الفولدر
 	local models = PlotsFolder:GetChildren()
 
-	-- تأكد إن في موديلات
 	if #models > 0 then
-		-- اختار موديل عشوائي
 		local randomIndex = math.random(1, #models)
 		local selectedModel = models[randomIndex]
 
 		print("Selected Model: " .. selectedModel.Name)
 
-		-- دور على Part اسمه PlotSign
 		local plotSign = selectedModel:FindFirstChild("PlotSign")
 
 		if plotSign and plotSign:IsA("BasePart") then
-			-- دور على SurfaceGui جوا البارت
 			local surfaceGui = plotSign:FindFirstChildOfClass("SurfaceGui")
 
 			if surfaceGui then
-				-- دور على Frame جوا الـ GUI
 				local frame = surfaceGui:FindFirstChildOfClass("Frame")
 
 				if frame then
-					-- دور على TextLabel جوا الفريم
 					local textLabel = frame:FindFirstChildOfClass("TextLabel")
 
 					if textLabel and textLabel:IsA("TextLabel") then
-						print("TextLabel Text: " .. textLabel.Text)
+						local labelText = textLabel.Text
+						print("TextLabel Text: " .. labelText)
+
+						-- 🔥 إنشاء BillboardGui لعرض النص
+						local billboard = Instance.new("BillboardGui")
+						billboard.Name = "ESPLabel"
+						billboard.Size = UDim2.new(0, 200, 0, 50)
+						billboard.StudsOffset = Vector3.new(0, 5, 0)
+						billboard.Adornee = selectedModel:FindFirstChildWhichIsA("BasePart") -- نربطه بأقرب بارت
+						billboard.AlwaysOnTop = true
+						billboard.Parent = selectedModel
+
+						-- 💬 إنشاء TextLabel داخل الـ BillboardGui
+						local label = Instance.new("TextLabel")
+						label.Size = UDim2.new(1, 0, 1, 0)
+						label.BackgroundTransparency = 1
+						label.Text = labelText
+						label.TextColor3 = Color3.new(1, 1, 1)
+						label.TextStrokeTransparency = 0.5
+						label.TextScaled = true
+						label.Font = Enum.Font.GothamBold
+						label.Parent = billboard
+
 					else
 						warn("TextLabel not found!")
 					end
