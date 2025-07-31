@@ -1,71 +1,117 @@
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local displayName = LocalPlayer and LocalPlayer.DisplayName or "Unknown"
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
-local PlotsFolder = workspace:WaitForChild("Plots")
+-- واجهة بسيطة فيها TextBox لكتابة اسم اللاعب
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TargetSelectorGui"
+screenGui.Parent = PlayerGui
 
-for _, model in ipairs(PlotsFolder:GetChildren()) do
-	if model:IsA("Model") then
-		local plotSign = model:FindFirstChild("PlotSign")
-		if plotSign and plotSign:IsA("BasePart") then
-			local surfaceGui = plotSign:FindFirstChildWhichIsA("SurfaceGui")
-			if surfaceGui then
-				local frame = surfaceGui:FindFirstChildWhichIsA("Frame")
-				if frame then
-					local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
-					if textLabel then
-						local function extractDisplayName(text)
-							-- لو النص مكتوب بالشكل: "Zeko's Base"
-							return string.match(text, "^(.-)'s Base$")
-						end
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(0, 200, 0, 30)
+textBox.Position = UDim2.new(0.5, -100, 0.1, 0)
+textBox.PlaceholderText = "Enter Username"
+textBox.Text = ""
+textBox.Font = Enum.Font.GothamBold
+textBox.TextSize = 16
+textBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+textBox.TextColor3 = Color3.new(1, 1, 1)
+textBox.ClearTextOnFocus = false
+textBox.Parent = screenGui
 
-						local extractedName = extractDisplayName(textLabel.Text)
+local function extractDisplayName(text)
+	return string.match(text, "^(.-)'s Base$")
+end
 
-						if extractedName == displayName then
-							-- Create invisible part above the house
-							local part = Instance.new("Part")
-							part.Anchored = true
-							part.CanCollide = false
-							part.Transparency = 1
-							part.Size = Vector3.new(0.5, 0.5, 0.5)
-							part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
-							part.Parent = workspace
+local function createESP(targetDisplayName, model)
+	local part = Instance.new("Part")
+	part.Anchored = true
+	part.CanCollide = false
+	part.Transparency = 1
+	part.Size = Vector3.new(0.5, 0.5, 0.5)
+	part.Position = model:GetModelCFrame().p + Vector3.new(0, 6, 0)
+	part.Parent = workspace
 
-							-- BillboardGui
-							local billboard = Instance.new("BillboardGui")
-							billboard.Size = UDim2.new(0, 150, 0, 30)
-							billboard.StudsOffset = Vector3.new(0, 1.5, 0)
-							billboard.AlwaysOnTop = true
-							billboard.Adornee = part
-							billboard.Parent = part
+	local billboard = Instance.new("BillboardGui")
+	billboard.Size = UDim2.new(0, 150, 0, 30)
+	billboard.StudsOffset = Vector3.new(0, 1.5, 0)
+	billboard.AlwaysOnTop = true
+	billboard.Adornee = part
+	billboard.Parent = part
 
-							local label = Instance.new("TextLabel")
-							label.Size = UDim2.new(1, 0, 1, 0)
-							label.BackgroundTransparency = 1
-							label.TextColor3 = Color3.new(1, 1, 1)
-							label.TextStrokeColor3 = Color3.new(0, 0, 0)
-							label.TextStrokeTransparency = 0.2
-							label.TextScaled = true
-							label.Font = Enum.Font.GothamBold
-							label.Text = "Your Base"
-							label.Parent = billboard
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, 0, 1, 0)
+	label.BackgroundTransparency = 1
+	label.TextColor3 = Color3.new(1, 1, 0)
+	label.TextStrokeColor3 = Color3.new(0, 0, 0)
+	label.TextStrokeTransparency = 0.2
+	label.TextScaled = true
+	label.Font = Enum.Font.GothamBold
+	label.Text = "Target's Base"
+	label.Parent = billboard
 
-							-- تحديث كل نص ثانية
-							task.spawn(function()
-								while true do
-									local currentExtracted = extractDisplayName(textLabel.Text)
-									if currentExtracted == displayName then
-										label.Text = "Your Base"
-									else
-										label.Text = ""
-									end
-									task.wait(0.5)
-								end
-							end)
+	-- تحديث الاسم لو اتغير
+	task.spawn(function()
+		local textLabel
+		local surfaceGui = model:FindFirstChild("PlotSign"):FindFirstChildWhichIsA("SurfaceGui")
+		if surfaceGui then
+			local frame = surfaceGui:FindFirstChildWhichIsA("Frame")
+			if frame then
+				textLabel = frame:FindFirstChildWhichIsA("TextLabel")
+			end
+		end
+
+		while true do
+			if textLabel then
+				local currentName = extractDisplayName(textLabel.Text)
+				if currentName == targetDisplayName then
+					label.Text = "Target's Base"
+				else
+					label.Text = ""
+				end
+			end
+			task.wait(0.5)
+		end
+	end)
+end
+
+-- لما اللاعب يكتب اسم ويضغط Enter
+textBox.FocusLost:Connect(function(enterPressed)
+	if not enterPressed then return end
+	local username = textBox.Text
+	local targetPlayer = Players:FindFirstChild(username)
+
+	if not targetPlayer then
+		warn("Player not found!")
+		textBox.PlaceholderText = "❌ Player not online"
+		textBox.Text = ""
+		return
+	end
+
+	local targetDisplayName = targetPlayer.DisplayName
+	local PlotsFolder = workspace:WaitForChild("Plots")
+
+	for _, model in ipairs(PlotsFolder:GetChildren()) do
+		if model:IsA("Model") then
+			local plotSign = model:FindFirstChild("PlotSign")
+			if plotSign and plotSign:IsA("BasePart") then
+				local surfaceGui = plotSign:FindFirstChildWhichIsA("SurfaceGui")
+				if surfaceGui then
+					local frame = surfaceGui:FindFirstChildWhichIsA("Frame")
+					if frame then
+						local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
+						if textLabel then
+							local nameOnSign = extractDisplayName(textLabel.Text)
+							if nameOnSign == targetDisplayName then
+								createESP(targetDisplayName, model)
+								textBox.PlaceholderText = "✅ Target found!"
+								textBox.Text = ""
+								break
+							end
 						end
 					end
 				end
 			end
 		end
 	end
-end
+end)
