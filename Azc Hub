@@ -1,106 +1,12 @@
+-- LocalScript داخل StarterPlayerScripts
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- واجهة GUI
 local screenGui = Instance.new("ScreenGui", PlayerGui)
-screenGui.ResetOnSpawn = false
-screenGui.Name = "ESP_TargetGui"
+screenGui.Name = "TestGui"
 
-local inputBox = Instance.new("TextBox")
-inputBox.Size = UDim2.new(0, 200, 0, 35)
-inputBox.Position = UDim2.new(0.5, -100, 0, 30)
-inputBox.PlaceholderText = "Enter Username"
-inputBox.Text = ""
-inputBox.Font = Enum.Font.GothamBold
-inputBox.TextSize = 18
-inputBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-inputBox.TextColor3 = Color3.new(1, 1, 1)
-inputBox.ClearTextOnFocus = false
-inputBox.Parent = screenGui
-
--- دالة لاستخراج DisplayName من النص
-local function extractDisplayName(text)
-	return string.match(text, "^(.-)'s Base$") or text
-end
-
--- دالة إنشاء ESP
-local function createESP(model)
-	local part = Instance.new("Part")
-	part.Anchored = true
-	part.CanCollide = false
-	part.Transparency = 1
-	part.Size = Vector3.new(1, 1, 1)
-	part.Position = model:GetModelCFrame().Position + Vector3.new(0, 6, 0)
-	part.Parent = workspace
-
-	local billboard = Instance.new("BillboardGui")
-	billboard.Size = UDim2.new(0, 150, 0, 40)
-	billboard.StudsOffset = Vector3.new(0, 1.5, 0)
-	billboard.AlwaysOnTop = true
-	billboard.Adornee = part
-	billboard.Parent = part
-
-	local label = Instance.new("TextLabel")
-	label.Size = UDim2.new(1, 0, 1, 0)
-	label.BackgroundTransparency = 1
-	label.TextColor3 = Color3.new(1, 1, 0)
-	label.TextStrokeTransparency = 0.2
-	label.Font = Enum.Font.GothamBold
-	label.TextScaled = true
-	label.Text = "Target's Base"
-	label.Parent = billboard
-end
-
--- عند الضغط على Enter بعد كتابة اليوزرنيم
-inputBox.FocusLost:Connect(function(enterPressed)
-	if not enterPressed then return end
-
-	local username = inputBox.Text
-	local targetPlayer = Players:FindFirstChild(username)
-
-	if not targetPlayer then
-		inputBox.PlaceholderText = "❌ Player not found"
-		inputBox.Text = ""
-		return
-	end
-
-	local targetDisplayName = targetPlayer.DisplayName
-	local PlotsFolder = workspace:FindFirstChild("Plots")
-	if not PlotsFolder then
-		warn("❌ No Plots folder in workspace")
-		return
-	end
-
-	local found = false
-
-	for _, model in ipairs(PlotsFolder:GetChildren()) do
-		if model:IsA("Model") then
-			local plotSign = model:FindFirstChild("PlotSign")
-			if plotSign and plotSign:IsA("BasePart") then
-				local surfaceGui = plotSign:FindFirstChildWhichIsA("SurfaceGui")
-				if surfaceGui then
-					local frame = surfaceGui:FindFirstChildWhichIsA("Frame")
-					if frame then
-						local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
-						if textLabel then
-							local name = extractDisplayName(textLabel.Text)
-							if name == targetDisplayName then
-								createESP(model)
-								found = true
-								break
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-
-	if found then
-		inputBox.PlaceholderText = "✅ Target Found"
-	else
-		inputBox.PlaceholderText = "❌ No Base Found"
-	end
-	inputBox.Text = ""
-end)
+local box = Instance.new("TextBox", screenGui)
+box.Size = UDim2.new(0, 200, 0, 30)
+box.Position = UDim2.new(0.5, -100, 0.5, -15)
+box.Text = "Test"
