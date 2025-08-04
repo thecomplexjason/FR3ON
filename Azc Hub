@@ -36,7 +36,7 @@ local StarterGui = game:GetService("StarterGui")
 
 StarterGui:SetCore("SendNotification", {
 	Title = "تحديث جديد 🟢",
-	Text = "السرقه التلثائية الثنائية",
+	Text = "👬 السرقه التلقائية الثنائية",
 	Duration = 100, -- بالثواني
 	Callback = function()
 	end,
