@@ -1,106 +1,100 @@
+if not isfolder('alchemyhub_sound') then
+    makefolder('alchemyhub_sound')
+end
+
+local playSound : (name : string, link : string) -> nil = function(name : string, link : string)
+    if not isfile("alchemyhub_sound/".. name ..".mp3") then
+        writefile("alchemyhub_sound/".. name ..".mp3", game:HttpGet(link))
+    end
+
+    local soundName : string = name..".mp3"
+    local SoundSFX : Instance = Instance.new("Sound")
+    SoundSFX.Parent = workspace
+    SoundSFX.SoundId = getcustomasset("alchemyhub_sound/" .. soundName)
+    SoundSFX:Play()
+end
+
+xpcall(function()
+    if not(oneclick or kaitan or kaitun or rollback) and not(skip_loading) then
+        local LoaderLib : {} = loadstring(game:HttpGet("https://pastebin.com/raw/M8wxbjxM"))()
+        if not(mute_sound) then
+            task.spawn(function()
+                playSound("windowstartup", "https://github.com/ZoiIntra/sound/raw/main/windows-xp-startup.mp3")
+            end)
+        end
+        LoaderLib:LoadInit({
+            Color = Color3.fromRGB(0, 255, 128),
+            Duration = 1.5,
+            Size =  87,
+        })
+    end
+end, function(err : string)
+    warn(string.format("Loading screen function error %s\n", err))
+end)
+
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
--- GUI لإدخال اسم اللاعب
-local screenGui = Instance.new("ScreenGui", PlayerGui)
-screenGui.Name = "TargetGui"
-screenGui.ResetOnSpawn = false
+local ScreenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+ScreenGui.Name = "TeleportGui"
 
-local inputBox = Instance.new("TextBox")
-inputBox.Size = UDim2.new(0, 200, 0, 35)
-inputBox.Position = UDim2.new(0.5, -100, 0, 30)
-inputBox.PlaceholderText = "Enter Username"
-inputBox.Text = ""
-inputBox.Font = Enum.Font.GothamBold
-inputBox.TextSize = 18
-inputBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-inputBox.TextColor3 = Color3.new(1, 1, 1)
-inputBox.ClearTextOnFocus = false
-inputBox.Parent = screenGui
+local button = Instance.new("TextButton")
+button.Name = "InstantSteal"
+button.Size = UDim2.new(0, 140, 0, 40)
+button.Position = UDim2.new(0.5, -70, 0.5, -20)
+button.Text = "FR3ON ▼"
+button.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+button.TextColor3 = Color3.new(1, 1, 1)
+button.Font = Enum.Font.SourceSansBold
+button.TextSize = 20
+button.Draggable = true
+button.Parent = ScreenGui
 
--- دالة استخراج DisplayName من النص
-local function extractDisplayName(text)
-	return string.match(text, "^(.-)'s Base$") or text
-end
+local dropDown = Instance.new("Frame")
+dropDown.Size = UDim2.new(1, 0, 0, 80)
+dropDown.Position = UDim2.new(0, 0, 1, 0)
+dropDown.BackgroundColor3 = Color3.fromRGB(200, 70, 70)
+dropDown.Visible = false
+dropDown.ClipsDescendants = true
+dropDown.Parent = button
 
--- دالة عمل ESP بصورة الأفاتار
-local function createESP(model, imageId)
-	local part = Instance.new("Part")
-	part.Anchored = true
-	part.CanCollide = false
-	part.Transparency = 1
-	part.Size = Vector3.new(1, 1, 1)
-	part.Position = model:GetModelCFrame().Position + Vector3.new(0, 6, 0)
-	part.Parent = workspace
+local option1 = Instance.new("TextButton")
+option1.Size = UDim2.new(1, 0, 0, 40)
+option1.Position = UDim2.new(0, 0, 0, 0)
+option1.Text = "Instant Steal"
+option1.BackgroundColor3 = Color3.fromRGB(255, 120, 120)
+option1.TextColor3 = Color3.new(1, 1, 1)
+option1.Font = Enum.Font.SourceSansBold
+option1.TextSize = 18
+option1.Parent = dropDown
 
-	local billboard = Instance.new("BillboardGui")
-	billboard.Size = UDim2.new(0, 150, 0, 150)
-	billboard.StudsOffset = Vector3.new(0, 2, 0)
-	billboard.AlwaysOnTop = true
-	billboard.Adornee = part
-	billboard.Parent = part
+local option2 = Instance.new("TextButton")
+option2.Size = UDim2.new(1, 0, 0, 40)
+option2.Position = UDim2.new(0, 0, 0, 40)
+option2.Text = "UP"
+option2.BackgroundColor3 = Color3.fromRGB(255, 120, 120)
+option2.TextColor3 = Color3.new(1, 1, 1)
+option2.Font = Enum.Font.SourceSansBold
+option2.TextSize = 18
+option2.Parent = dropDown
 
-	local imageLabel = Instance.new("ImageLabel")
-	imageLabel.Size = UDim2.new(1, 0, 1, 0)
-	imageLabel.BackgroundTransparency = 1
-	imageLabel.Image = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. imageId .. "&width=150&height=150&format=png"
-	imageLabel.Parent = billboard
-end
+local dropVisible = false
+button.MouseButton1Click:Connect(function()
+    dropVisible = not dropVisible
+    dropDown.Visible = dropVisible
+end)
 
--- عند الضغط على Enter بعد كتابة اليوزرنيم
-inputBox.FocusLost:Connect(function(enterPressed)
-	if not enterPressed then return end
+option1.MouseButton1Click:Connect(function()
+    if humanoidRootPart then
+        humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, 90.53, humanoidRootPart.Position.Z)
+    end
+end)
 
-	local username = inputBox.Text
-	local targetPlayer = Players:FindFirstChild(username)
 
-	if not targetPlayer then
-		inputBox.PlaceholderText = "❌ Player not found"
-		inputBox.Text = ""
-		return
-	end
-
-	local targetDisplayName = targetPlayer.DisplayName
-	local targetUserId = targetPlayer.UserId
-	local PlotsFolder = workspace:FindFirstChild("Plots")
-
-	if not PlotsFolder then
-		warn("❌ No Plots folder found")
-		return
-	end
-
-	local found = false
-
-	for _, model in ipairs(PlotsFolder:GetChildren()) do
-		if model:IsA("Model") then
-			local plotSign = model:FindFirstChild("PlotSign")
-			if plotSign and plotSign:IsA("BasePart") then
-				local surfaceGui = plotSign:FindFirstChildWhichIsA("SurfaceGui")
-				if surfaceGui then
-					local frame = surfaceGui:FindFirstChildWhichIsA("Frame")
-					if frame then
-						local textLabel = frame:FindFirstChildWhichIsA("TextLabel")
-						if textLabel then
-							local extractedName = extractDisplayName(textLabel.Text)
-
-							-- تجاهل بيت اللاعب المحلي
-							if extractedName == targetDisplayName and extractedName ~= LocalPlayer.DisplayName then
-								createESP(model, targetUserId)
-								found = true
-								break
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-
-	if found then
-		inputBox.PlaceholderText = "✅ Target Marked"
-	else
-		inputBox.PlaceholderText = "❌ No Base Found"
-	end
-	inputBox.Text = ""
+option2.MouseButton1Click:Connect(function()
+    if humanoidRootPart then
+        humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, 130.53, humanoidRootPart.Position.Z)
+    end
 end)
