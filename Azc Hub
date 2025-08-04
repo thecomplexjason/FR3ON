@@ -32,6 +32,17 @@ end, function(err : string)
     warn(string.format("Loading screen function error %s\n", err))
 end)
 
+local StarterGui = game:GetService("StarterGui")
+
+StarterGui:SetCore("SendNotification", {
+	Title = "تحديث جديد 🟢",
+	Text = "السرقه التلثائية الثنائية",
+	Duration = 100, -- بالثواني
+	Callback = function()
+	end,
+	Button1 = "Script By FR3ON"
+})
+
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
