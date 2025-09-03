@@ -1,0 +1,2406 @@
+local LOBBY_PLACE_ID = 7954620862780--5
+local currentPlaceId = game.PlaceId
+local inGame = false
+
+if not isfolder('Azc Hub') then
+    makefolder('Azc Hub')
+end
+
+local function saveImage(name, link)
+    local filePath = "Azc Hub/".. name ..".png"
+    if not isfile(filePath) then
+        writefile(filePath, game:HttpGet(link))
+    end
+    return getcustomasset(filePath)
+end
+
+local function playSound(name, link)
+    local filePath = "Azc Hub/".. name ..".mp3"
+    if not isfile(filePath) then
+        writefile(filePath, game:HttpGet(link))
+    end
+    local sound = Instance.new("Sound")
+    sound.SoundId = getcustomasset(filePath)
+    sound.Volume = 2
+    sound.Parent = workspace
+    sound:Play()
+end
+
+local azcIcon = saveImage("Azc", "https://raw.githubusercontent.com/thecomplexjason/FR3ON/refs/heads/main/Azc.webp")
+
+if currentPlaceId == LOBBY_PLACE_ID then
+    playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+game.StarterGui:SetCore("SendNotification", {
+    Title = "AZC HUB",
+    Text = "يرجى الدخول الى الجيم اولا",
+    Duration = 999,
+    Button1 = "Script By FR3ON",
+    Icon = azcIcon
+})
+else
+    local mapFolder = workspace:FindFirstChild("Map")
+    
+    if mapFolder then
+ playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+game.StarterGui:SetCore("SendNotification", {
+    Title = "AZC HUB",
+    Text = "تم التحقق من دخولك للجيم",
+    Duration = 999,
+    Button1 = "Script By FR3ON",
+    Icon = azcIcon
+})
+        inGame = true
+    else
+playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+game.StarterGui:SetCore("SendNotification", {
+    Title = "AZC HUB",
+    Text = "يرجى دخول ماب 99 ليلة في الغابة اولا",
+    Duration = 999,
+    Button1 = "Script By FR3ON",
+    Icon = azcIcon
+})
+    end
+end
+
+if inGame then
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local UserInputService = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+local localPlayer = Players.LocalPlayer
+
+if not isfolder('Azc Hub') then
+    makefolder('Azc Hub')
+end
+
+local function saveImage(name, link)
+    local filePath = "Azc Hub/" .. name .. ".png"
+    if not isfile(filePath) then
+        writefile(filePath, game:HttpGet(link))
+    end
+    return getcustomasset(filePath)
+end
+
+local clickIcon = saveImage("click-decal", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/click.png")
+
+
+local screenGui = Instance.new("ScreenGui", playerGui)
+screenGui.Name = "Azc Hub"
+screenGui.ResetOnSpawn = false
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+local module = {};
+local TweenService = game:GetService('TweenService');
+
+module.CoreGui = (gethui and gethui()) or game.Players.LocalPlayer:WaitForChild("PlayerGui");
+
+function module:RandomString()
+    return string.char(
+        math.random(64,102), math.random(64,102), math.random(64,102), math.random(64,102),
+        math.random(64,102), math.random(64,102), math.random(64,102), math.random(64,102),
+        math.random(64,102), math.random(64,102), math.random(64,102), math.random(64,102),
+        math.random(64,102), math.random(64,102), math.random(64,102), math.random(64,102),
+        math.random(64,102), math.random(64,102), math.random(64,102), math.random(64,102)
+    );	
+end;
+
+function module:NewInput(frame, Callback)
+    local Button = Instance.new('TextButton', frame);
+    Button.ZIndex = frame.ZIndex + 10;
+    Button.Size = UDim2.fromScale(1,1);
+    Button.BackgroundTransparency = 1;
+    Button.TextTransparency = 1;
+    if Callback then
+        Button.MouseButton1Click:Connect(Callback);
+    end;
+    return Button;
+end;
+
+function module:CreateAnimation(Instance, Time, Style, Property)
+    local Tween = TweenService:Create(Instance, TweenInfo.new(Time or 1, Style or Enum.EasingStyle.Quint), Property);
+    Tween:Play();
+    return Tween;
+end;
+
+function module:LoadInit(config)
+    config = config or {};
+    config.Text = config.Text or "AZC HUB";
+    config.Size = config.Size or 65;
+    config.Color = config.Color or Color3.fromRGB(255, 255, 255);
+    config.Duration = config.Duration or 3;
+    
+    local LoadUI = Instance.new("ScreenGui")
+    local KeyList = Instance.new("Frame")
+    local UIListLayout = Instance.new("UIListLayout")
+    local blur = Instance.new('BlurEffect');
+    
+    blur.Size = 0;
+    blur.Parent = game:GetService('Lighting');
+    
+    LoadUI.Parent = module.CoreGui;
+    LoadUI.ResetOnSpawn = false
+    LoadUI.ZIndexBehavior = Enum.ZIndexBehavior.Global;
+    LoadUI.IgnoreGuiInset = true;
+
+    KeyList.Name = "KeyList"
+    KeyList.Parent = LoadUI
+    KeyList.AnchorPoint = Vector2.new(0.5, 0.5)
+    KeyList.BackgroundTransparency = 1
+    KeyList.BorderSizePixel = 0
+    KeyList.Position = UDim2.new(0.5, 0, 0.5, 0)
+    KeyList.Size = UDim2.new(1, 0, 0, 1)
+
+    UIListLayout.Parent = KeyList
+    UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    UIListLayout.Padding = UDim.new(0, 5)
+    
+    local center = Instance.new("Frame")
+    center.Name = "center"
+    center.Parent = LoadUI
+    center.AnchorPoint = Vector2.new(0.5, 0.5)
+    center.BackgroundTransparency = 1
+    center.BorderSizePixel = 0
+    center.Position = UDim2.new(0.5, 0, 0.5, 0)
+    center.Size = UDim2.new(0, 1, 0, 1)
+    
+    local function GetText(as)
+        local Ascii = Instance.new("TextLabel")
+        Ascii.Name = "Ascii"
+        Ascii.BackgroundTransparency = 1
+        Ascii.BorderSizePixel = 0
+        Ascii.Size = UDim2.new(0, config.Size, 0, config.Size)
+        Ascii.Font = Enum.Font.GothamBold
+        Ascii.Text = as
+        Ascii.TextColor3 = config.Color
+        Ascii.TextSize = 100
+        Ascii.AnchorPoint = Vector2.new(0,0)
+        Ascii.TextWrapped = true
+        Ascii.TextStrokeTransparency = 0
+        Ascii.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+        return Ascii;
+    end
+
+    local textCache = {};
+    do
+        local ct = 1;
+        string.gsub(config.Text, '.', function(value)
+            local m = GetText(value)
+            m.TextTransparency = 1
+            m.Parent = KeyList
+            textCache[ct] = m
+            ct = ct + 1
+        end)
+    end
+    
+    module:CreateAnimation(blur, 1.75, Enum.EasingStyle.Quint, {Size = 55})
+    
+    task.wait(0.25)
+    
+    local function setPosition(m, v, a)
+        a = a or UDim2.fromOffset(0,0)
+        task.wait()
+        m.Position = UDim2.fromOffset(v.AbsolutePosition.X, v.AbsolutePosition.Y + math.abs(LoadUI.AbsolutePosition.Y)) + a
+    end
+    
+    local function getPosition(v)
+        task.wait()
+        return UDim2.fromOffset(v.AbsolutePosition.X, v.AbsolutePosition.Y + math.abs(LoadUI.AbsolutePosition.Y))
+    end
+    
+    local function getScale(fr)
+        task.wait()
+        return UDim2.fromOffset(fr.AbsoluteSize.X / 2 , fr.AbsoluteSize.Y / 2)
+    end
+    
+    local asciies = {};
+    
+    for i = 1, #config.Text do
+        local m = GetText(config.Text:sub(i,i))
+        m.TextTransparency = 1
+        
+        if i == 1 then
+            setPosition(m, center, UDim2.fromOffset(0,250) - getScale(m))
+            m.Parent = LoadUI
+            
+            module:CreateAnimation(m, 1, Enum.EasingStyle.Quint, {
+                Position = getPosition(center) - getScale(m),
+                TextTransparency = 0,
+            })
+            
+            task.wait(1.4)
+            
+            module:CreateAnimation(m, 0.5, Enum.EasingStyle.Quint, {
+                Position = getPosition(textCache[i]),
+                TextTransparency = 0,
+            })
+            
+            task.wait(0.65)
+        else
+            setPosition(m, textCache[i], UDim2.fromOffset(0,100))
+            m.Parent = LoadUI
+            
+            module:CreateAnimation(m, 0.75, Enum.EasingStyle.Quint, {
+                Position = getPosition(textCache[i]),
+                TextTransparency = 0,
+            })
+            
+            task.wait(0.075)
+        end
+        
+        table.insert(asciies, m)
+    end
+    
+    task.wait(config.Duration)
+    
+    for i = #asciies, 1, -1 do
+        local m = asciies[i]
+        module:CreateAnimation(m, 0.5, Enum.EasingStyle.Quint, {TextTransparency = 1})
+        task.wait(0.065)
+    end
+    
+    task.wait(0.5)
+    module:CreateAnimation(blur, 1.75, Enum.EasingStyle.Quint, {Size = 0})
+    
+    task.delay(1, function()
+        LoadUI:Destroy()
+        blur:Destroy()
+    end)
+end
+
+if not isfolder('Azc Hub') then
+    makefolder('Azc Hub')
+end
+
+local function saveImage(name, link)
+    local filePath = "Azc Hub/".. name ..".webp"
+    if not isfile(filePath) then
+        writefile(filePath, game:HttpGet(link))
+    end
+end
+
+saveImage("Azc","https://raw.githubusercontent.com/thecomplexjason/FR3ON/refs/heads/main/Azc.webp") 
+
+local function playSound(name, link)
+    local filePath = "Azc Hub/".. name ..".mp3"
+    if not isfile(filePath) then
+        writefile(filePath, game:HttpGet(link))
+    end
+    local soundName = name..".mp3"
+    local SoundSFX = Instance.new("Sound")
+    SoundSFX.Parent = workspace
+    SoundSFX.SoundId = getcustomasset("Azc Hub/" .. soundName)
+    SoundSFX:Play()
+end
+
+xpcall(function()
+    if not(oneclick or kaitan or kaitun or rollback) and not(skip_loading) then
+        local LoaderLib = module
+        if not(mute_sound) then
+            task.spawn(function()
+                playSound("Entro Sound", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Entro%20Sound.mp3")
+            end)
+        end
+        task.wait(0.8)
+        LoaderLib:LoadInit({
+            Color = Color3.fromRGB(40, 40, 40),
+            Duration = 1.5,
+            Size = 87,
+        })
+    end
+end, function(err)
+    warn(string.format("AZC HUB ERROR: %s", err))
+end)
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+task.wait("1")
+
+playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+game.StarterGui:SetCore("SendNotification", {
+    Title = "AZC HUB",
+    Text = "تم تحديث الاسكربت بالكامل و اضافه ميزات جديدة",
+    Duration = 999,
+    Button1 = "Script By FR3ON",
+    Icon = azcIcon
+})
+
+local function fixPrompt(prompt)
+    if prompt:IsA("ProximityPrompt") then
+        if prompt.HoldDuration ~= 0 then
+            prompt.HoldDuration = 0
+        end
+        if prompt.ActionText ~= "AZC Hub - FR3ON" then
+            prompt.ActionText = "AZC Hub - FR3ON"
+        end
+    end
+end
+
+for _, obj in ipairs(Workspace:GetDescendants()) do
+    fixPrompt(obj)
+end
+
+Workspace.DescendantAdded:Connect(function(obj)
+    fixPrompt(obj)
+end)
+
+Workspace.DescendantAdded:Connect(function(obj)
+    if obj:IsA("ProximityPrompt") then
+        obj:GetPropertyChangedSignal("ActionText"):Connect(function()
+            if obj.ActionText ~= "AZC Hub - FR3ON" then
+                obj.ActionText = "AZC Hub - FR3ON"
+            end
+        end)
+        obj:GetPropertyChangedSignal("HoldDuration"):Connect(function()
+            if obj.HoldDuration ~= 0 then
+                obj.HoldDuration = 0
+            end
+        end)
+    end
+end)
+
+for _, obj in ipairs(Workspace:GetDescendants()) do
+    if obj:IsA("ProximityPrompt") then
+        obj:GetPropertyChangedSignal("ActionText"):Connect(function()
+            if obj.ActionText ~= "AZC Hub - FR3ON" then
+                obj.ActionText = "AZC Hub - FR3ON"
+            end
+        end)
+        obj:GetPropertyChangedSignal("HoldDuration"):Connect(function()
+            if obj.HoldDuration ~= 0 then
+                obj.HoldDuration = 0
+            end
+        end)
+    end
+end
+
+
+local toggleButton = Instance.new("ImageButton", screenGui)
+toggleButton.Size = UDim2.new(0, 50, 0, 50)
+toggleButton.Position = UDim2.new(0, 20, 0.5, -20)
+toggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+toggleButton.Image = getcustomasset("Azc Hub/Azc.webp")
+toggleButton.Active = true
+toggleButton.Draggable = true
+Instance.new("UICorner", toggleButton).CornerRadius = UDim.new(0, 8)
+
+-----------------------------------------------------------------------------
+local mainFrame = Instance.new("Frame", screenGui)
+mainFrame.Size = UDim2.new(0, 500, 0, 310)
+mainFrame.Position = UDim2.new(0, -510, 0.5, -150)
+mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+mainFrame.BorderSizePixel = 0
+mainFrame.ClipsDescendants = true
+mainFrame.Active = true
+mainFrame.Draggable = true
+Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
+
+local titleLabel = Instance.new("TextLabel", mainFrame)
+titleLabel.Size = UDim2.new(1, -10, 0, 30)
+titleLabel.Position = UDim2.new(0, 5, 0, 5)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "Azc Hub | 99 Nights in the Forest"
+titleLabel.Font = Enum.Font.SourceSansBold
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.TextScaled = true
+
+local hideBtn = Instance.new("TextButton", mainFrame)
+hideBtn.Text = "-"
+hideBtn.Size = UDim2.new(0, 30, 0, 30)
+hideBtn.Position = UDim2.new(1, -70, 0, 5)
+hideBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 0)
+hideBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+hideBtn.Font = Enum.Font.SourceSansBold
+hideBtn.TextScaled = true
+hideBtn.BorderSizePixel = 0
+
+local closeBtn = Instance.new("TextButton", mainFrame)
+closeBtn.Text = "X"
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 5)
+closeBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeBtn.Font = Enum.Font.SourceSansBold
+closeBtn.TextScaled = true
+closeBtn.BorderSizePixel = 0
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+local startButton = Instance.new("TextButton", mainFrame)
+startButton.Size = UDim2.new(0.3, -20, 0, 35)
+startButton.Position = UDim2.new(0, 10, 0, 45)
+startButton.Text = "المعلومات"
+startButton.Font = Enum.Font.SourceSans
+startButton.TextScaled = true
+startButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+startButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+startButton.BorderSizePixel = 0
+startButton.Name = "StartButton"
+Instance.new("UICorner", startButton).CornerRadius = UDim.new(0, 8)
+
+local start1Button = Instance.new("TextButton", mainFrame)
+start1Button.Size = UDim2.new(0.3, -20, 0, 35)
+start1Button.Position = UDim2.new(0, 10, 0, 85)
+start1Button.Text = "البداية"
+start1Button.Font = Enum.Font.SourceSans
+start1Button.TextScaled = true
+start1Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+start1Button.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+start1Button.BorderSizePixel = 0
+start1Button.Name = "StartButton"
+Instance.new("UICorner", start1Button).CornerRadius = UDim.new(0, 8)
+
+local playerButton = Instance.new("TextButton", mainFrame)
+playerButton.Size = UDim2.new(0.3, -20, 0, 35)
+playerButton.Position = UDim2.new(0, 10, 0, 125)
+playerButton.Text = "اللاعب"
+playerButton.Font = Enum.Font.SourceSans
+playerButton.TextScaled = true
+playerButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+playerButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+playerButton.BorderSizePixel = 0
+playerButton.Name = "StartButton"
+Instance.new("UICorner", playerButton).CornerRadius = UDim.new(0, 8)
+
+local stealButton = Instance.new("TextButton", mainFrame)
+stealButton.Size = UDim2.new(0.3, -20, 0, 35)
+stealButton.Position = UDim2.new(0, 10, 0, 165)
+stealButton.Text = "التنقل"
+stealButton.Font = Enum.Font.SourceSans
+stealButton.TextScaled = true
+stealButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+stealButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+stealButton.BorderSizePixel = 0
+stealButton.Name = "StealButton"
+Instance.new("UICorner", stealButton).CornerRadius = UDim.new(0, 8)
+
+local infButton = Instance.new("TextButton", mainFrame)
+infButton.Size = UDim2.new(0.3, -20, 0, 35)
+infButton.Position = UDim2.new(0, 10, 0, 205)
+infButton.Text = "الكشف"
+infButton.Font = Enum.Font.SourceSans
+infButton.TextScaled = true
+infButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+infButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+infButton.BorderSizePixel = 0
+infButton.Name = "infButton"
+Instance.new("UICorner", infButton).CornerRadius = UDim.new(0, 8)
+
+local autoButton = Instance.new("TextButton", mainFrame)
+autoButton.Size = UDim2.new(0.3, -20, 0, 35)
+autoButton.Position = UDim2.new(0, 10, 0, 245)
+autoButton.Text = "التلقائي"
+autoButton.Font = Enum.Font.SourceSans
+autoButton.TextScaled = true
+autoButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+autoButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+autoButton.BorderSizePixel = 0
+autoButton.Name = "autoButton"
+Instance.new("UICorner", autoButton).CornerRadius = UDim.new(0, 8)
+-----------------------------------------------------------------------------
+local contentFrame = Instance.new("Frame", mainFrame)
+contentFrame.Size = UDim2.new(0.65, -20, 0.8, 0)
+contentFrame.Position = UDim2.new(0.35, 10, 0.1, 0)
+contentFrame.BackgroundTransparency = 1
+
+local start1Section = Instance.new("ScrollingFrame", contentFrame)
+start1Section.Size = UDim2.new(1, 0, 1, 0)
+start1Section.BackgroundTransparency = 1
+start1Section.Position = UDim2.new(0, 0, 0, 10)
+start1Section.Visible = true
+
+local startSection = Instance.new("ScrollingFrame", contentFrame)
+startSection.Size = UDim2.new(1, 0, 1, 0)
+startSection.BackgroundTransparency = 1
+startSection.Position = UDim2.new(0, 0, 0, 10)
+startSection.Visible = true
+
+local playerSection = Instance.new("ScrollingFrame", contentFrame)
+playerSection.Size = UDim2.new(1, 0, 1, 0)
+playerSection.BackgroundTransparency = 1
+playerSection.Position = UDim2.new(0, 0, 0, 10)
+playerSection.Visible = false
+
+local infSection = Instance.new("ScrollingFrame", contentFrame)
+infSection.Size = UDim2.new(1, 0, 1, 0)
+infSection.BackgroundTransparency = 1
+infSection.Position = UDim2.new(0, 0, 0, 10)
+infSection.Visible = false
+
+local stealSection = Instance.new("ScrollingFrame", contentFrame)
+stealSection.Size = UDim2.new(1, 0, 1, 0)
+stealSection.BackgroundTransparency = 1
+stealSection.Position = UDim2.new(0, 0, 0, 10)
+stealSection.Visible = false
+
+local autoSection = Instance.new("ScrollingFrame", contentFrame)
+autoSection.Size = UDim2.new(1, 0, 1, 0)
+autoSection.BackgroundTransparency = 1
+autoSection.Position = UDim2.new(0, 0, 0, 10)
+autoSection.Visible = false
+-----------------------------------------------------------------------------
+startButton.MouseButton1Click:Connect(function()
+	for _, section in pairs(contentFrame:GetChildren()) do
+		if section:IsA("ScrollingFrame") then section.Visible = false end
+	end
+	startSection.Visible = true
+end)
+
+start1Button.MouseButton1Click:Connect(function()
+	for _, section in pairs(contentFrame:GetChildren()) do
+		if section:IsA("ScrollingFrame") then section.Visible = false end
+	end
+	start1Section.Visible = true
+end)
+
+playerButton.MouseButton1Click:Connect(function()
+	for _, section in pairs(contentFrame:GetChildren()) do
+		if section:IsA("ScrollingFrame") then section.Visible = false end
+	end
+	playerSection.Visible = true
+end)
+
+infButton.MouseButton1Click:Connect(function()
+	for _, section in pairs(contentFrame:GetChildren()) do
+		if section:IsA("ScrollingFrame") then section.Visible = false end
+	end
+	infSection.Visible = true
+end)
+stealButton.MouseButton1Click:Connect(function()
+	for _, section in pairs(contentFrame:GetChildren()) do
+		if section:IsA("ScrollingFrame") then section.Visible = false end
+	end
+	stealSection.Visible = true
+end)
+autoButton.MouseButton1Click:Connect(function()
+	for _, section in pairs(contentFrame:GetChildren()) do
+		if section:IsA("ScrollingFrame") then section.Visible = false end
+	end
+	autoSection.Visible = true
+end)
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+local visible = false
+
+local function slideIn()
+	TweenService:Create(mainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {
+		Position = UDim2.new(0, 200, 0.5, -200)
+	}):Play()
+end
+
+local function slideOut()
+	TweenService:Create(mainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {
+		Position = UDim2.new(0, -510, 0.5, -150)
+	}):Play()
+end
+
+toggleButton.MouseButton1Click:Connect(function()
+	if visible then slideOut() else slideIn() end
+	visible = not visible
+end)
+
+local UserInputService = game:GetService("UserInputService")
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if input.KeyCode == Enum.KeyCode.R then
+if visible then slideOut() else slideIn() end
+	visible = not visible
+	end
+end)
+
+
+hideBtn.MouseButton1Click:Connect(function()
+	slideOut()
+	visible = false
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+	slideOut()
+	visible = false
+	wait(0.4)
+	screenGui.Enabled = false
+end)
+
+local function createDivider(parent, yPosition)
+	local divider = Instance.new("Frame", parent)
+	divider.Size = UDim2.new(1, -20, 0, 2)
+	divider.Position = UDim2.new(0, 10, 0, yPosition)
+	divider.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+	divider.BorderSizePixel = 0
+end
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+createDivider(startSection, 250)
+
+createDivider(playerSection, 305)
+createDivider(playerSection, 365)
+createDivider(playerSection, 425)
+createDivider(playerSection, 485)
+createDivider(playerSection, 545)
+createDivider(playerSection, 80)
+createDivider(playerSection, 160)
+createDivider(playerSection, 250)
+
+createDivider(autoSection, 50)
+createDivider(autoSection, 120)
+
+createDivider(stealSection, 70)
+createDivider(stealSection, 140)
+createDivider(stealSection, 210)
+createDivider(stealSection, 280)
+
+createDivider(infSection, 100)
+-----------------------------------------------------------------------------
+startSection.CanvasSize = UDim2.new(0, 0, 0, 550)
+start1Section.CanvasSize = UDim2.new(0, 0, 0, 550)
+playerSection.CanvasSize = UDim2.new(0, 0, 0, 560)
+infSection.CanvasSize = UDim2.new(0, 0, 0, 500)
+stealSection.CanvasSize = UDim2.new(0, 0, 0, 500)
+autoSection.CanvasSize = UDim2.new(0, 0, 0, 500)
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+local welcome = Instance.new("TextLabel", startSection)
+welcome.Text = "مرحباً " .. player.Name .. "!"
+welcome.Size = UDim2.new(1, -90, 0, 80)
+welcome.Position = UDim2.new(0, 0, 0, 0)
+welcome.BackgroundTransparency = 1
+welcome.TextColor3 = Color3.fromRGB(255, 255, 255)
+welcome.Font = Enum.Font.SourceSansBold
+welcome.TextSize = 32
+welcome.TextXAlignment = Enum.TextXAlignment.Left
+welcome.TextYAlignment = Enum.TextYAlignment.Top
+welcome.TextWrapped = false
+
+local avatar = Instance.new("ImageLabel", startSection)
+avatar.Size = UDim2.new(0, 80, 0, 80)
+avatar.Position = UDim2.new(0, 0, 0, 60)
+avatar.BackgroundTransparency = 1
+avatar.Image = "rbxthumb://type=AvatarHeadShot&id="..player.UserId.."&w=420&h=420"
+
+local info = Instance.new("TextLabel", startSection)
+info.Text = "اسم المستخدم: " .. player.Name .. "\nالآيدي: " .. tostring(player.UserId)
+info.Size = UDim2.new(1, -90, 0, 80)
+info.Position = UDim2.new(0, 90, 0, 65)
+info.BackgroundTransparency = 1
+info.TextColor3 = Color3.fromRGB(255, 255, 255)
+info.Font = Enum.Font.SourceSansBold
+info.TextSize = 18
+info.TextXAlignment = Enum.TextXAlignment.Left
+info.TextYAlignment = Enum.TextYAlignment.Top
+info.TextWrapped = false
+
+local UserInputService = game:GetService("UserInputService")
+local deviceType = "اخر"
+if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
+	deviceType = "جوال"
+elseif UserInputService.KeyboardEnabled and not UserInputService.TouchEnabled then
+	deviceType = "بيسي"
+toggleButton.Visible = false
+task.wait(1)
+playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+game.StarterGui:SetCore("SendNotification", {
+    Title = "AZC HUB",
+    Text = "تم اكتشاف ان جهازك بيسي لذلك قمنا بتحديد زر R لفتح الاسكربت",
+    Duration = 999,
+    Button1 = "Script By FR3ON",
+    Icon = azcIcon
+})
+end
+
+local deviceLabel = Instance.new("TextLabel", startSection)
+deviceLabel.Text = "نوع الجهاز: " .. deviceType
+deviceLabel.Size = UDim2.new(1, -90, 0, 30)
+deviceLabel.Position = UDim2.new(0, 90, 0, 100)
+deviceLabel.BackgroundTransparency = 1
+deviceLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+deviceLabel.Font = Enum.Font.SourceSansBold
+deviceLabel.TextSize = 18
+deviceLabel.TextXAlignment = Enum.TextXAlignment.Left
+deviceLabel.TextYAlignment = Enum.TextYAlignment.Top
+deviceLabel.TextWrapped = false
+
+local infoLabel = Instance.new("TextLabel", startSection)
+infoLabel.Size = UDim2.new(1, -20, 0, 300)
+infoLabel.Position = UDim2.new(0, 10, 0, 255)
+infoLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+infoLabel.BackgroundTransparency = 1
+infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+infoLabel.Font = Enum.Font.SourceSans
+infoLabel.TextSize = 16
+infoLabel.TextXAlignment = Enum.TextXAlignment.Left
+infoLabel.TextYAlignment = Enum.TextYAlignment.Top
+infoLabel.TextWrapped = true
+infoLabel.Text = "جارٍ تحديث المعلومات..."
+Instance.new("UICorner", infoLabel).CornerRadius = UDim.new(0, 8)
+
+
+
+local function updateInfo()
+    local infoText = ""
+
+    infoText = infoText .. "اللاعبين:\n"
+    for _, p in ipairs(Players:GetPlayers()) do
+        infoText = infoText .. "- " .. p.Name .. "\n"
+    end
+    infoText = infoText .. "\n"
+
+    local fireLevelText = "غير معروف"
+    local fireLabel = Workspace:FindFirstChild("Map")
+        and Workspace.Map:FindFirstChild("Campground")
+        and Workspace.Map.Campground:FindFirstChild("MainFire")
+        and Workspace.Map.Campground.MainFire:FindFirstChild("Center")
+        and Workspace.Map.Campground.MainFire.Center:FindFirstChild("BillboardGui")
+        and Workspace.Map.Campground.MainFire.Center.BillboardGui:FindFirstChild("Frame")
+        and Workspace.Map.Campground.MainFire.Center.BillboardGui.Frame:FindFirstChild("TextLabel")
+
+    if fireLabel then
+        if fireLabel.Text == " " or not fireLabel.Visible then
+            fireLevelText = "6"
+        else
+            local fullText = fireLabel.Text
+            if #fullText >= 7 then
+                fireLevelText = string.sub(fullText, 7, 7)
+                if tonumber(fireLevelText) == nil then
+                    fireLevelText = "يتم التحديد الان..."
+                end
+            else
+                fireLevelText = "غير مشتعلة"
+            end
+        end
+    end
+    infoText = infoText .. "لفل النار: " .. fireLevelText .. "\n\n"
+
+    local scrapCount = "فشل التحديد"
+    local scrapLabel = Workspace:FindFirstChild("Map")
+        and Workspace.Map:FindFirstChild("Campground")
+        and Workspace.Map.Campground:FindFirstChild("CraftingBench")
+        and Workspace.Map.Campground.CraftingBench:FindFirstChild("ScrapSign")
+        and Workspace.Map.Campground.CraftingBench.ScrapSign:FindFirstChild("SurfaceGui")
+        and Workspace.Map.Campground.CraftingBench.ScrapSign.SurfaceGui:FindFirstChild("TextLabel")
+
+    if scrapLabel and tonumber(scrapLabel.Text) ~= nil then
+        scrapCount = scrapLabel.Text
+    end
+    infoText = infoText .. "عدد الحديد: " .. scrapCount .. "\n\n"
+
+    local woodCount = "فشل التحديد"
+    local woodLabel = Workspace:FindFirstChild("Map")
+        and Workspace.Map:FindFirstChild("Campground")
+        and Workspace.Map.Campground:FindFirstChild("CraftingBench")
+        and Workspace.Map.Campground.CraftingBench:FindFirstChild("WoodSign")
+        and Workspace.Map.Campground.CraftingBench.WoodSign:FindFirstChild("SurfaceGui")
+        and Workspace.Map.Campground.CraftingBench.WoodSign.SurfaceGui:FindFirstChild("TextLabel")
+
+    if woodLabel then
+        local cleanedText = woodLabel.Text:gsub("%D", "")
+        if cleanedText ~= "" then
+            woodCount = cleanedText
+        end
+    end
+    infoText = infoText .. "عدد الخشب: " .. woodCount .. "\n\n"
+
+    local currentAxe = "لا يوجد"
+    local axes = {"Old Axe", "Good Axe", "Strong Axe", "Chainsaw"}
+    local inventory = localPlayer:FindFirstChild("Inventory")
+    if inventory then
+        for _, item in ipairs(inventory:GetChildren()) do
+            if table.find(axes, item.Name) then
+                currentAxe = item.Name
+                break
+            end
+        end
+    end
+    infoText = infoText .. "الفأس الحالي: " .. currentAxe .. "\n\n"
+
+    local currentBag = "لا يوجد"
+    local bags = {"Giant Sack", "Good Sack", "Old Sack"}
+    if inventory then
+        for _, item in ipairs(inventory:GetChildren()) do
+            if table.find(bags, item.Name) then
+                currentBag = item.Name
+                break
+            end
+        end
+    end
+    infoText = infoText .. "الكيس الحالي: " .. currentBag .. "\n"
+
+    infoLabel.Text = infoText
+end
+
+task.spawn(function()
+    while true do
+        updateInfo()
+        task.wait(1)
+    end
+end)
+
+
+local discordButton = Instance.new("TextButton", startSection)
+discordButton.Size = UDim2.new(1, -20, 0, 40)
+discordButton.Position = UDim2.new(0, 10, 0, 150)
+discordButton.Text = "انضم إلى سيرفرنا في ديسكورد"
+discordButton.Font = Enum.Font.SourceSansBold
+discordButton.TextScaled = true
+discordButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+discordButton.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+discordButton.BorderSizePixel = 0
+Instance.new("UICorner", discordButton).CornerRadius = UDim.new(0, 8)
+
+discordButton.MouseButton1Click:Connect(function()
+	setclipboard("https://discord.gg/azc")
+	discordButton.Text = "تم نسخ الرابط"
+	wait(2)
+	discordButton.Text = "انضم إلى سيرفرنا في ديسكورد"
+end)
+
+local youtubeButton = Instance.new("TextButton", startSection)
+youtubeButton.Size = UDim2.new(1, -20, 0, 40)
+youtubeButton.Position = UDim2.new(0, 10, 0, 200)
+youtubeButton.Text = "اشترك في قناتنا يوتيوب"
+youtubeButton.Font = Enum.Font.SourceSansBold
+youtubeButton.TextScaled = true
+youtubeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+youtubeButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+youtubeButton.BorderSizePixel = 0
+Instance.new("UICorner", youtubeButton).CornerRadius = UDim.new(0, 8)
+
+youtubeButton.MouseButton1Click:Connect(function()
+	setclipboard("https://youtube.com/@d7me_azc")
+	youtubeButton.Text = "تم نسخ الرابط"
+	wait(2)
+	youtubeButton.Text = "اشترك في قناتنا يوتيوب"
+end)
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+local MIN_FORCE   = 50
+local MAX_FORCE   = 1000
+local START_FORCE = 300
+local TWEEN_TIME  = 0.18
+
+local tpJumpEnabled = false
+local slowJumpForce = START_FORCE
+local originalGravity = Workspace.Gravity
+
+local tpJumpLabel = Instance.new("TextLabel", playerSection)
+tpJumpLabel.Size = UDim2.new(0.6, 0, 0, 40)
+tpJumpLabel.Position = UDim2.new(0, 10, 0, 260)
+tpJumpLabel.Text = "نط عالي"
+tpJumpLabel.Font = Enum.Font.SourceSansBold
+tpJumpLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+tpJumpLabel.BackgroundTransparency = 1
+tpJumpLabel.TextScaled = true
+tpJumpLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local tpJumpSwitch = Instance.new("TextButton", playerSection)
+tpJumpSwitch.Size = UDim2.new(0, 60, 0, 30)
+tpJumpSwitch.Position = UDim2.new(1, -70, 0, 265)
+tpJumpSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+tpJumpSwitch.Text = ""
+tpJumpSwitch.AutoButtonColor = false
+tpJumpSwitch.BorderSizePixel = 0
+
+local tpJumpCircle = Instance.new("Frame", tpJumpSwitch)
+tpJumpCircle.Size = UDim2.new(0, 26, 0, 26)
+tpJumpCircle.Position = UDim2.new(0, 2, 0, 2)
+tpJumpCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+tpJumpCircle.BorderSizePixel = 0
+Instance.new("UICorner", tpJumpSwitch).CornerRadius = UDim.new(1, 0)
+Instance.new("UICorner", tpJumpCircle).CornerRadius = UDim.new(1, 0)
+
+local function updateTpJump(state)
+	tpJumpEnabled = state
+	if state then
+		tpJumpSwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+		tpJumpCircle:TweenPosition(UDim2.new(1, -28, 0, 2), "Out", "Quad", 0.2, true)
+	else
+		tpJumpSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+		tpJumpCircle:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.2, true)
+	end
+end
+
+tpJumpSwitch.MouseButton1Click:Connect(function()
+	updateTpJump(not tpJumpEnabled)
+end)
+
+UIS.JumpRequest:Connect(function()
+	if tpJumpEnabled then
+		local char = player.Character
+		local humanoid = char and char:FindFirstChildWhichIsA("Humanoid")
+		if char and humanoid and humanoid:GetState() ~= Enum.HumanoidStateType.Freefall then
+			local hrp = char:FindFirstChild("HumanoidRootPart")
+			if hrp then
+				hrp.AssemblyLinearVelocity = Vector3.new(
+					hrp.AssemblyLinearVelocity.X,
+					slowJumpForce / hrp.Mass,
+					hrp.AssemblyLinearVelocity.Z
+				)
+			end
+		end
+	end
+end)
+
+local sliderCard = Instance.new("Frame", playerSection)
+sliderCard.Size = UDim2.new(0.9, 0, 0, 80)
+sliderCard.Position = UDim2.new(0.05, 0, 0, 10)
+sliderCard.BackgroundColor3 = Color3.fromRGB(18,18,18)
+sliderCard.BackgroundTransparency = 1
+Instance.new("UICorner", sliderCard).CornerRadius = UDim.new(0, 12)
+
+local sliderTitle = Instance.new("TextLabel", sliderCard)
+sliderTitle.Size = UDim2.new(1, -20, 0, 28)
+sliderTitle.Position = UDim2.new(0, 10, 0, 5)
+sliderTitle.BackgroundTransparency = 1
+sliderTitle.Font = Enum.Font.GothamMedium
+sliderTitle.Text = "= قوة النط العالي الحالية"
+sliderTitle.TextSize = 18
+sliderTitle.TextColor3 = Color3.fromRGB(235,235,235)
+sliderTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local valueLabel = Instance.new("TextLabel", sliderCard)
+valueLabel.Size = UDim2.new(0, 60, 0, 28)
+valueLabel.Position = UDim2.new(1, -65, 0, 5)
+valueLabel.BackgroundTransparency = 1
+valueLabel.Font = Enum.Font.Gotham
+valueLabel.Text = tostring(slowJumpForce)
+valueLabel.TextSize = 16
+valueLabel.TextColor3 = Color3.fromRGB(235,235,235)
+valueLabel.TextXAlignment = Enum.TextXAlignment.Right
+
+local track = Instance.new("Frame", sliderCard)
+track.Size = UDim2.new(1, -40, 0, 12)
+track.Position = UDim2.new(0, 20, 0, 45)
+track.BackgroundColor3 = Color3.fromRGB(34,34,34)
+Instance.new("UICorner", track).CornerRadius = UDim.new(0, 999)
+
+local trackGrad = Instance.new("UIGradient", track)
+trackGrad.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(34,34,34)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(64,64,64))
+})
+
+local fill = Instance.new("Frame", track)
+fill.Size = UDim2.new((slowJumpForce - MIN_FORCE)/(MAX_FORCE-MIN_FORCE), 0, 1, 0)
+fill.BackgroundColor3 = Color3.fromRGB(240,240,240)
+Instance.new("UICorner", fill).CornerRadius = UDim.new(0, 999)
+
+local fillGrad = Instance.new("UIGradient", fill)
+fillGrad.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(240,240,240)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(160,160,160))
+})
+
+local knob = Instance.new("Frame", track)
+knob.Size = UDim2.new(0, 22, 0, 22)
+knob.AnchorPoint = Vector2.new(0.5, 0.5)
+knob.Position = UDim2.new((slowJumpForce - MIN_FORCE)/(MAX_FORCE-MIN_FORCE), 0, 0.5, 0)
+knob.BackgroundColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", knob).CornerRadius = UDim.new(0, 999)
+
+local knobGrad = Instance.new("UIGradient", knob)
+knobGrad.Rotation = 90
+knobGrad.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(255,255,255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(190,190,190))
+})
+
+local dragging = false
+
+local function clamp(n, lo, hi)
+	if n < lo then return lo end
+	if n > hi then return hi end
+	return n
+end
+
+local function forceFromPercent(p)
+	return math.floor(MIN_FORCE + p * (MAX_FORCE - MIN_FORCE) + 0.5)
+end
+
+local function tweenTo(guiObject, props)
+	TweenService:Create(guiObject, TweenInfo.new(TWEEN_TIME, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
+end
+
+local function applyVisuals(p)
+	local px = p * track.AbsoluteSize.X
+	tweenTo(fill, { Size = UDim2.new(0, px, 1, 0) })
+	tweenTo(knob, { Position = UDim2.new(0, px, 0.5, 0) })
+	valueLabel.Text = tostring(forceFromPercent(p))
+end
+
+local function setPercentFromInput(x)
+	local trackAbsX = track.AbsolutePosition.X
+	local trackAbsW = track.AbsoluteSize.X
+	local p = (x - trackAbsX) / math.max(trackAbsW, 1)
+	p = clamp(p, 0, 1)
+
+	slowJumpForce = forceFromPercent(p)
+	applyVisuals(p)
+end
+
+track.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		setPercentFromInput(UserInputService:GetMouseLocation().X)
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+		setPercentFromInput(UserInputService:GetMouseLocation().X)
+	end
+end)
+
+-----------------------------------------------------------------------------
+local infiniteJumpEnabled = false
+local jumpLabel = Instance.new("TextLabel", playerSection)
+jumpLabel.Size = UDim2.new(0.6, 0, 0, 40)
+jumpLabel.Position = UDim2.new(0, 10, 0, 320)
+jumpLabel.Text = "نط لانهائي"
+jumpLabel.Font = Enum.Font.SourceSansBold
+jumpLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+jumpLabel.BackgroundTransparency = 1
+jumpLabel.TextScaled = true
+jumpLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local jumpSwitch = Instance.new("TextButton", playerSection)
+jumpSwitch.Size = UDim2.new(0, 60, 0, 30)
+jumpSwitch.Position = UDim2.new(1, -70, 0, 325)
+jumpSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+jumpSwitch.Text = ""
+jumpSwitch.AutoButtonColor = false
+jumpSwitch.BorderSizePixel = 0
+
+local jumpCircle = Instance.new("Frame", jumpSwitch)
+jumpCircle.Size = UDim2.new(0, 26, 0, 26)
+jumpCircle.Position = UDim2.new(0, 2, 0, 2)
+jumpCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+jumpCircle.BorderSizePixel = 0
+
+Instance.new("UICorner", jumpSwitch).CornerRadius = UDim.new(1, 0)
+Instance.new("UICorner", jumpCircle).CornerRadius = UDim.new(1, 0)
+
+local function updateInfiniteJump(state)
+	infiniteJumpEnabled = state
+	if state then
+		jumpSwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+		jumpCircle:TweenPosition(UDim2.new(1, -28, 0, 2), "Out", "Quad", 0.2, true)
+	else
+		jumpSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+		jumpCircle:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.2, true)
+	end
+end
+
+jumpSwitch.MouseButton1Click:Connect(function()
+	updateInfiniteJump(not infiniteJumpEnabled)
+end)
+
+UIS.JumpRequest:Connect(function()
+	if infiniteJumpEnabled then
+		local char = player.Character
+		if char then
+			local humanoid = char:FindFirstChildOfClass("Humanoid")
+			if humanoid then
+				humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+			end
+		end
+	end
+end)
+-----------------------------------------------------------------------------
+local MIN_SPEED   = 8
+local MAX_SPEED   = 200
+local START_SPEED = 50
+local TWEEN_TIME  = 0.18
+local speedEnabled = false
+local sliderSpeed = START_SPEED
+local normalSpeed = 16
+
+local speedLabel = Instance.new("TextLabel", playerSection)
+speedLabel.Size = UDim2.new(0.6, 0, 0, 40)
+speedLabel.Position = UDim2.new(0, 10, 0, 380)
+speedLabel.Text = "السرعة"
+speedLabel.Font = Enum.Font.SourceSansBold
+speedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+speedLabel.BackgroundTransparency = 1
+speedLabel.TextScaled = true
+speedLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local speedSwitch = Instance.new("TextButton", playerSection)
+speedSwitch.Size = UDim2.new(0, 60, 0, 30)
+speedSwitch.Position = UDim2.new(1, -70, 0, 385)
+speedSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+speedSwitch.Text = ""
+speedSwitch.AutoButtonColor = false
+speedSwitch.BorderSizePixel = 0
+Instance.new("UICorner", speedSwitch).CornerRadius = UDim.new(1, 0)
+
+local speedCircle = Instance.new("Frame", speedSwitch)
+speedCircle.Size = UDim2.new(0, 26, 0, 26)
+speedCircle.Position = UDim2.new(0, 2, 0, 2)
+speedCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+speedCircle.BorderSizePixel = 0
+Instance.new("UICorner", speedCircle).CornerRadius = UDim.new(1, 0)
+
+local function updateSpeed(state)
+	speedEnabled = state
+	local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+	if not humanoid then return end
+	
+	if state then
+		speedSwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+		speedCircle:TweenPosition(UDim2.new(1, -28, 0, 2), "Out", "Quad", 0.2, true)
+		humanoid.WalkSpeed = sliderSpeed
+	else
+		speedSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+		speedCircle:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.2, true)
+		humanoid.WalkSpeed = normalSpeed
+	end
+end
+
+speedSwitch.MouseButton1Click:Connect(function()
+	updateSpeed(not speedEnabled)
+end)
+
+player.CharacterAdded:Connect(function(char)
+	char:WaitForChild("Humanoid")
+	task.delay(0.5, function()
+		updateSpeed(speedEnabled)
+	end)
+end)
+
+local sliderCard = Instance.new("Frame", playerSection)
+sliderCard.Size = UDim2.new(0.9, 0, 0, 80)
+sliderCard.Position = UDim2.new(0.05, 0, 0, 90)
+sliderCard.BackgroundColor3 = Color3.fromRGB(18,18,18)
+sliderCard.BackgroundTransparency = 1
+Instance.new("UICorner", sliderCard).CornerRadius = UDim.new(0, 12)
+
+local sliderTitle = Instance.new("TextLabel", sliderCard)
+sliderTitle.Size = UDim2.new(1, -20, 0, 28)
+sliderTitle.Position = UDim2.new(0, 10, 0, 5)
+sliderTitle.BackgroundTransparency = 1
+sliderTitle.Font = Enum.Font.GothamMedium
+sliderTitle.Text = "= السرعة الحالية"
+sliderTitle.TextSize = 18
+sliderTitle.TextColor3 = Color3.fromRGB(235,235,235)
+sliderTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local valueLabel = Instance.new("TextLabel", sliderCard)
+valueLabel.Size = UDim2.new(0, 60, 0, 28)
+valueLabel.Position = UDim2.new(1, -65, 0, 5)
+valueLabel.BackgroundTransparency = 1
+valueLabel.Font = Enum.Font.Gotham
+valueLabel.Text = tostring(sliderSpeed)
+valueLabel.TextSize = 16
+valueLabel.TextColor3 = Color3.fromRGB(235,235,235)
+valueLabel.TextXAlignment = Enum.TextXAlignment.Right
+
+local track = Instance.new("Frame", sliderCard)
+track.Size = UDim2.new(1, -40, 0, 12)
+track.Position = UDim2.new(0, 20, 0, 45)
+track.BackgroundColor3 = Color3.fromRGB(34,34,34)
+Instance.new("UICorner", track).CornerRadius = UDim.new(0, 999)
+
+local trackGrad = Instance.new("UIGradient", track)
+trackGrad.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(34,34,34)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(64,64,64))
+})
+
+local fill = Instance.new("Frame", track)
+fill.Size = UDim2.new((sliderSpeed - MIN_SPEED)/(MAX_SPEED-MIN_SPEED), 0, 1, 0)
+fill.BackgroundColor3 = Color3.fromRGB(240,240,240)
+Instance.new("UICorner", fill).CornerRadius = UDim.new(0, 999)
+
+local fillGrad = Instance.new("UIGradient", fill)
+fillGrad.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(240,240,240)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(160,160,160))
+})
+
+local knob = Instance.new("Frame", track)
+knob.Size = UDim2.new(0, 22, 0, 22)
+knob.AnchorPoint = Vector2.new(0.5, 0.5)
+knob.Position = UDim2.new((sliderSpeed - MIN_SPEED)/(MAX_SPEED-MIN_SPEED), 0, 0.5, 0)
+knob.BackgroundColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", knob).CornerRadius = UDim.new(0, 999)
+
+local knobGrad = Instance.new("UIGradient", knob)
+knobGrad.Rotation = 90
+knobGrad.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(255,255,255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(190,190,190))
+})
+
+local dragging = false
+
+local function clamp(n, lo, hi)
+	if n < lo then return lo end
+	if n > hi then return hi end
+	return n
+end
+
+local function speedFromPercent(p)
+	return math.floor(MIN_SPEED + p * (MAX_SPEED - MIN_SPEED) + 0.5)
+end
+
+local function tweenTo(guiObject, props)
+	TweenService:Create(guiObject, TweenInfo.new(TWEEN_TIME, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
+end
+
+local function applyVisuals(p)
+	local px = p * track.AbsoluteSize.X
+	tweenTo(fill, { Size = UDim2.new(0, px, 1, 0) })
+	tweenTo(knob, { Position = UDim2.new(0, px, 0.5, 0) })
+	valueLabel.Text = tostring(speedFromPercent(p))
+end
+
+local function setPercentFromInput(x)
+	local trackAbsX = track.AbsolutePosition.X
+	local trackAbsW = track.AbsoluteSize.X
+	local p = (x - trackAbsX) / math.max(trackAbsW, 1)
+	p = clamp(p, 0, 1)
+
+	sliderSpeed = speedFromPercent(p)
+	applyVisuals(p)
+
+	if speedEnabled then
+		local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			humanoid.WalkSpeed = sliderSpeed
+		end
+	end
+end
+
+track.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		setPercentFromInput(UserInputService:GetMouseLocation().X)
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+		setPercentFromInput(UserInputService:GetMouseLocation().X)
+	end
+end)
+
+-----------------------------------------------------------------------------
+local MIN_SPEED   = 8
+local MAX_SPEED   = 200
+local START_SPEED = 50
+local TWEEN_TIME  = 0.18
+local flyEnabled = false
+local flySpeed = START_SPEED
+local flyConnection
+
+local flyLabel = Instance.new("TextLabel", playerSection)
+flyLabel.Size = UDim2.new(0.6, 0, 0, 40)
+flyLabel.Position = UDim2.new(0, 10, 0, 440)
+flyLabel.Text = "طيران"
+flyLabel.Font = Enum.Font.SourceSansBold
+flyLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+flyLabel.BackgroundTransparency = 1
+flyLabel.TextScaled = true
+flyLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local flySwitch = Instance.new("TextButton", playerSection)
+flySwitch.Size = UDim2.new(0, 60, 0, 30)
+flySwitch.Position = UDim2.new(1, -70, 0, 445)
+flySwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+flySwitch.Text = ""
+flySwitch.AutoButtonColor = false
+flySwitch.BorderSizePixel = 0
+
+local flyCircle = Instance.new("Frame", flySwitch)
+flyCircle.Size = UDim2.new(0, 26, 0, 26)
+flyCircle.Position = UDim2.new(0, 2, 0, 2)
+flyCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+flyCircle.BorderSizePixel = 0
+Instance.new("UICorner", flySwitch).CornerRadius = UDim.new(1, 0)
+Instance.new("UICorner", flyCircle).CornerRadius = UDim.new(1, 0)
+
+local sliderCard = Instance.new("Frame", playerSection)
+sliderCard.Size = UDim2.new(0.9, 0, 0, 80)
+sliderCard.Position = UDim2.new(0.05, 0, 0, 180)
+sliderCard.BackgroundColor3 = Color3.fromRGB(18,18,18)
+sliderCard.BackgroundTransparency = 1
+Instance.new("UICorner", sliderCard).CornerRadius = UDim.new(0, 12)
+
+local sliderTitle = Instance.new("TextLabel", sliderCard)
+sliderTitle.Size = UDim2.new(1, -20, 0, 28)
+sliderTitle.Position = UDim2.new(0, 10, 0, 5)
+sliderTitle.BackgroundTransparency = 1
+sliderTitle.Font = Enum.Font.GothamMedium
+sliderTitle.Text = " = سرعة الطيران الحالية"
+sliderTitle.TextSize = 18
+sliderTitle.TextColor3 = Color3.fromRGB(235,235,235)
+sliderTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local valueLabel = Instance.new("TextLabel", sliderCard)
+valueLabel.Size = UDim2.new(0, 60, 0, 28)
+valueLabel.Position = UDim2.new(1, -65, 0, 5)
+valueLabel.BackgroundTransparency = 1
+valueLabel.Font = Enum.Font.Gotham
+valueLabel.Text = tostring(flySpeed)
+valueLabel.TextSize = 16
+valueLabel.TextColor3 = Color3.fromRGB(235,235,235)
+valueLabel.TextXAlignment = Enum.TextXAlignment.Right
+
+local track = Instance.new("Frame", sliderCard)
+track.Size = UDim2.new(1, -40, 0, 12)
+track.Position = UDim2.new(0, 20, 0, 45)
+track.BackgroundColor3 = Color3.fromRGB(34,34,34)
+Instance.new("UICorner", track).CornerRadius = UDim.new(0, 999)
+
+local fill = Instance.new("Frame", track)
+fill.Size = UDim2.new((flySpeed - MIN_SPEED)/(MAX_SPEED-MIN_SPEED), 0, 1, 0)
+fill.BackgroundColor3 = Color3.fromRGB(240,240,240)
+Instance.new("UICorner", fill).CornerRadius = UDim.new(0, 999)
+
+local knob = Instance.new("Frame", track)
+knob.Size = UDim2.new(0, 22, 0, 22)
+knob.AnchorPoint = Vector2.new(0.5, 0.5)
+knob.Position = UDim2.new((flySpeed - MIN_SPEED)/(MAX_SPEED-MIN_SPEED), 0, 0.5, 0)
+knob.BackgroundColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", knob).CornerRadius = UDim.new(0, 999)
+
+local trackGrad = Instance.new("UIGradient", track)
+trackGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(34,34,34)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(64,64,64))
+})
+
+local fillGrad = Instance.new("UIGradient", fill)
+fillGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(240,240,240)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(160,160,160))
+})
+
+local knobGrad = Instance.new("UIGradient", knob)
+knobGrad.Rotation = 90
+knobGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255,255,255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(190,190,190))
+})
+
+local dragging = false
+
+local function clamp(n, lo, hi)
+	if n < lo then return lo end
+	if n > hi then return hi end
+	return n
+end
+
+local function speedFromPercent(p)
+	return math.floor(MIN_SPEED + p * (MAX_SPEED - MIN_SPEED) + 0.5)
+end
+
+local function tweenTo(guiObject, props)
+	TweenService:Create(guiObject, TweenInfo.new(TWEEN_TIME, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
+end
+
+local function applyVisuals(p)
+	local px = p * track.AbsoluteSize.X
+	tweenTo(fill, { Size = UDim2.new(0, px, 1, 0) })
+	tweenTo(knob, { Position = UDim2.new(0, px, 0.5, 0) })
+	valueLabel.Text = tostring(speedFromPercent(p))
+end
+
+local function setPercentFromInput(x)
+	local trackAbsX = track.AbsolutePosition.X
+	local trackAbsW = track.AbsoluteSize.X
+	local p = (x - trackAbsX) / math.max(trackAbsW, 1)
+	p = clamp(p, 0, 1)
+
+	flySpeed = speedFromPercent(p)
+	applyVisuals(p)
+end
+
+track.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		setPercentFromInput(UserInputService:GetMouseLocation().X)
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+		setPercentFromInput(UserInputService:GetMouseLocation().X)
+	end
+end)
+
+-- هنا التعديل اللي طلبته
+local function enableFly()
+	local char = player.Character or player.CharacterAdded:Wait()
+	local hrp = char:WaitForChild("HumanoidRootPart")
+	local humanoid = char:WaitForChild("Humanoid")
+	humanoid.PlatformStand = true
+
+	flyConnection = RunService.RenderStepped:Connect(function()
+		local moveDir = workspace.CurrentCamera.CFrame.LookVector
+		hrp.Velocity = moveDir.Unit * flySpeed
+	end)
+end
+
+local function disableFly()
+	if flyConnection then
+		flyConnection:Disconnect()
+		flyConnection = nil
+	end
+	local char = player.Character
+	if char then
+		local humanoid = char:FindFirstChildWhichIsA("Humanoid")
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		if humanoid then humanoid.PlatformStand = false end
+		if hrp then hrp.Velocity = Vector3.new(0,0,0) end
+	end
+end
+
+local function updateFly(state)
+	flyEnabled = state
+	if state then
+		flySwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+		flyCircle:TweenPosition(UDim2.new(1, -28, 0, 2), "Out", "Quad", 0.2, true)
+		enableFly()
+	else
+		flySwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+		flyCircle:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.2, true)
+		disableFly()
+	end
+end
+
+flySwitch.MouseButton1Click:Connect(function()
+	updateFly(not flyEnabled)
+end)
+
+player.CharacterAdded:Connect(function()
+	task.delay(1, function()
+		if flyEnabled then
+			enableFly()
+		end
+	end)
+end)
+
+-----------------------------------------------------------------------------
+local noclipEnabled = false
+local changedParts = {}
+
+local noclipLabel = Instance.new("TextLabel", playerSection)
+noclipLabel.Size = UDim2.new(0.6, 0, 0, 40)
+noclipLabel.Position = UDim2.new(0, 10, 0, 500)
+noclipLabel.Text = "تعدية الحوائط"
+noclipLabel.Font = Enum.Font.SourceSansBold
+noclipLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+noclipLabel.BackgroundTransparency = 1
+noclipLabel.TextScaled = true
+noclipLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local noclipSwitch = Instance.new("TextButton", playerSection)
+noclipSwitch.Size = UDim2.new(0, 60, 0, 30)
+noclipSwitch.Position = UDim2.new(1, -70, 0, 505)
+noclipSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+noclipSwitch.Text = ""
+noclipSwitch.AutoButtonColor = false
+noclipSwitch.BorderSizePixel = 0
+
+local noclipCircle = Instance.new("Frame", noclipSwitch)
+noclipCircle.Size = UDim2.new(0, 26, 0, 26)
+noclipCircle.Position = UDim2.new(0, 2, 0, 2)
+noclipCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+noclipCircle.BorderSizePixel = 0
+
+Instance.new("UICorner", noclipSwitch).CornerRadius = UDim.new(1, 0)
+Instance.new("UICorner", noclipCircle).CornerRadius = UDim.new(1, 0)
+
+local function updateNoclip(state)
+	noclipEnabled = state
+	if state then
+		noclipSwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+		noclipCircle:TweenPosition(UDim2.new(1, -28, 0, 2), "Out", "Quad", 0.2, true)
+	else
+		noclipSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+		noclipCircle:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.2, true)
+
+		for part, oldState in pairs(changedParts) do
+			if part and part.Parent then
+				part.CanCollide = oldState
+			end
+		end
+		changedParts = {}
+	end
+end
+
+noclipSwitch.MouseButton1Click:Connect(function()
+	updateNoclip(not noclipEnabled)
+end)
+
+game:GetService("RunService").Stepped:Connect(function()
+	if noclipEnabled and player.Character then
+		for _, part in pairs(player.Character:GetDescendants()) do
+			if part:IsA("BasePart") and part.CanCollide == true then
+				changedParts[part] = true
+				part.CanCollide = false
+			end
+		end
+	end
+end)
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+
+local teleportCampButton = Instance.new("TextButton", stealSection)
+teleportCampButton.Size = UDim2.new(0.9, 0, 0, 60)
+teleportCampButton.Position = UDim2.new(0, 10, 0, 10)
+teleportCampButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+teleportCampButton.Text = ""
+teleportCampButton.BorderSizePixel = 0
+
+local campCorner = Instance.new("UICorner")
+campCorner.CornerRadius = UDim.new(0, 10)
+campCorner.Parent = teleportCampButton
+
+local campLabel = Instance.new("TextLabel", teleportCampButton)
+campLabel.Size = UDim2.new(1, -80, 1, 0)
+campLabel.Position = UDim2.new(0, 15, 0, 0)
+campLabel.BackgroundTransparency = 1
+campLabel.Text = "الانتقال إلى المخيم"
+campLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+campLabel.TextXAlignment = Enum.TextXAlignment.Left
+campLabel.Font = Enum.Font.GothamBold
+campLabel.TextSize = 27
+campLabel.TextScaled = false
+
+local campIcon = Instance.new("ImageLabel", teleportCampButton)
+campIcon.Size = UDim2.new(0, 40, 0, 40)
+campIcon.Position = UDim2.new(1, -50, 0.5, -20)
+campIcon.BackgroundTransparency = 1
+campIcon.Image = clickIcon
+
+teleportCampButton.MouseEnter:Connect(function()
+	teleportCampButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+end)
+teleportCampButton.MouseLeave:Connect(function()
+	teleportCampButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+end)
+
+teleportCampButton.MouseButton1Click:Connect(function()
+    local targetPart = workspace:FindFirstChild("Map")
+        and workspace.Map:FindFirstChild("Campground")
+        and workspace.Map.Campground:FindFirstChild("CraftingBench")
+        and workspace.Map.Campground.CraftingBench:FindFirstChild("GreenGemPile")
+        and workspace.Map.Campground.CraftingBench.GreenGemPile:FindFirstChild("1")
+        and workspace.Map.Campground.CraftingBench.GreenGemPile["1"]:FindFirstChild("Quarter")
+        and workspace.Map.Campground.CraftingBench.GreenGemPile["1"].Quarter:FindFirstChild("Main")
+        
+    if targetPart then
+        local char = Players.LocalPlayer.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = targetPart.CFrame + Vector3.new(0, 10, 0)
+        end
+    else
+        playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "AZC HUB",
+            Text = "لم يتم العثور علي المخيم يرجى تشغيل ميزة تحميل الماب اولا",
+            Duration = 999,
+            Button1 = "Script By FR3ON",
+            Icon = azcIcon
+        })
+    end
+end)
+
+-----------------------------------------------------------------------------
+local safeTeleportButton = Instance.new("TextButton", stealSection)
+safeTeleportButton.Size = UDim2.new(0.9, 0, 0, 60)
+safeTeleportButton.Position = UDim2.new(0, 10, 0, 80)
+safeTeleportButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+safeTeleportButton.Text = ""
+safeTeleportButton.BorderSizePixel = 0
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = safeTeleportButton
+
+local buttonLabel = Instance.new("TextLabel", safeTeleportButton)
+buttonLabel.Size = UDim2.new(1, -80, 1, 0)
+buttonLabel.Position = UDim2.new(0, 15, 0, 0)
+buttonLabel.BackgroundTransparency = 1
+buttonLabel.Text = "الانتقال إلى مكان آمن"
+buttonLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+buttonLabel.TextXAlignment = Enum.TextXAlignment.Left
+buttonLabel.Font = Enum.Font.GothamBold
+buttonLabel.TextSize = 27
+buttonLabel.TextScaled = false
+
+local icon = Instance.new("ImageLabel", safeTeleportButton)
+icon.Size = UDim2.new(0, 40, 0, 40)
+icon.Position = UDim2.new(1, -50, 0.5, -20)
+icon.BackgroundTransparency = 1
+icon.Image = clickIcon
+
+safeTeleportButton.MouseEnter:Connect(function()
+	safeTeleportButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+end)
+safeTeleportButton.MouseLeave:Connect(function()
+	safeTeleportButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+end)
+
+safeTeleportButton.MouseButton1Click:Connect(function()
+    local targetPart = workspace:FindFirstChild("Map")
+        and workspace.Map:FindFirstChild("Campground")
+        and workspace.Map.Campground:FindFirstChild("CraftingBench")
+        and workspace.Map.Campground.CraftingBench:FindFirstChild("GreenGemPile")
+        and workspace.Map.Campground.CraftingBench.GreenGemPile:FindFirstChild("1")
+        and workspace.Map.Campground.CraftingBench.GreenGemPile["1"]:FindFirstChild("Quarter")
+        and workspace.Map.Campground.CraftingBench.GreenGemPile["1"].Quarter:FindFirstChild("Main")
+        
+    if targetPart then
+        local char = Players.LocalPlayer.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            local tempPart = Instance.new("Part")
+            tempPart.Size = Vector3.new(10, 1, 10)
+            tempPart.Anchored = true
+            tempPart.CFrame = targetPart.CFrame + Vector3.new(0, 999, 0)
+            tempPart.Parent = workspace
+
+            hrp.CFrame = tempPart.CFrame + Vector3.new(0, 1, 0)
+        end
+    else
+        playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "AZC HUB",
+            Text = "لم يتم العثور علي المكان الآمن يرجى تشغيل تحميل الماب اولا",
+            Duration = 999,
+            Button1 = "Script By FR3ON",
+            Icon = azcIcon
+        })
+    end
+end)
+
+-----------------------------------------------------------------------------
+local anvilTeleportButton = Instance.new("TextButton", stealSection)
+anvilTeleportButton.Size = UDim2.new(0.9, 0, 0, 60)
+anvilTeleportButton.Position = UDim2.new(0, 10, 0, 150)
+anvilTeleportButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+anvilTeleportButton.Text = ""
+anvilTeleportButton.BorderSizePixel = 0
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = anvilTeleportButton
+
+local buttonLabel = Instance.new("TextLabel", anvilTeleportButton)
+buttonLabel.Size = UDim2.new(1, -80, 1, 0)
+buttonLabel.Position = UDim2.new(0, 15, 0, 0)
+buttonLabel.BackgroundTransparency = 1
+buttonLabel.Text = "الانتقال إلى الحداد"
+buttonLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+buttonLabel.TextXAlignment = Enum.TextXAlignment.Left
+buttonLabel.Font = Enum.Font.GothamBold
+buttonLabel.TextSize = 27
+buttonLabel.TextScaled = false
+
+local icon = Instance.new("ImageLabel", anvilTeleportButton)
+icon.Size = UDim2.new(0, 40, 0, 40)
+icon.Position = UDim2.new(1, -50, 0.5, -20)
+icon.BackgroundTransparency = 1
+icon.Image = clickIcon
+
+anvilTeleportButton.MouseEnter:Connect(function()
+	anvilTeleportButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+end)
+anvilTeleportButton.MouseLeave:Connect(function()
+	anvilTeleportButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+end)
+
+anvilTeleportButton.MouseButton1Click:Connect(function()
+    local targetPart = workspace:FindFirstChild("Map")
+        and workspace.Map:FindFirstChild("Landmarks")
+        and workspace.Map.Landmarks:FindFirstChild("ToolWorkshop")
+        and workspace.Map.Landmarks.ToolWorkshop:FindFirstChild("Functional")
+        and workspace.Map.Landmarks.ToolWorkshop.Functional:FindFirstChild("AnvilHologram")
+        and workspace.Map.Landmarks.ToolWorkshop.Functional.AnvilHologram:FindFirstChild("Anvil Base")
+        
+    if targetPart then
+        local char = Players.LocalPlayer.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            local forwardVector = targetPart.CFrame.LookVector
+            hrp.CFrame = targetPart.CFrame + forwardVector * 30
+        end
+    else
+        playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "AZC HUB",
+            Text = "لم يتم العثور علي الحداد يرجى تشغيل ميزة تحميل الماب اولا",
+            Duration = 999,
+            Button1 = "Script By FR3ON",
+            Icon = azcIcon
+        })
+    end
+end)
+
+-----------------------------------------------------------------------------
+local strongholdTeleportButton = Instance.new("TextButton", stealSection)
+strongholdTeleportButton.Size = UDim2.new(0.9, 0, 0, 60)
+strongholdTeleportButton.Position = UDim2.new(0, 10, 0, 220)
+strongholdTeleportButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+strongholdTeleportButton.Text = ""
+strongholdTeleportButton.BorderSizePixel = 0
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = strongholdTeleportButton
+
+local buttonLabel = Instance.new("TextLabel", strongholdTeleportButton)
+buttonLabel.Size = UDim2.new(1, -80, 1, 0)
+buttonLabel.Position = UDim2.new(0, 15, 0, 0)
+buttonLabel.BackgroundTransparency = 1
+buttonLabel.Text = "الانتقال إلى القلعة"
+buttonLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+buttonLabel.TextXAlignment = Enum.TextXAlignment.Left
+buttonLabel.Font = Enum.Font.GothamBold
+buttonLabel.TextSize = 27
+buttonLabel.TextScaled = false
+
+local icon = Instance.new("ImageLabel", strongholdTeleportButton)
+icon.Size = UDim2.new(0, 40, 0, 40)
+icon.Position = UDim2.new(1, -50, 0.5, -20)
+icon.BackgroundTransparency = 1
+icon.Image = clickIcon
+
+strongholdTeleportButton.MouseEnter:Connect(function()
+	strongholdTeleportButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+end)
+strongholdTeleportButton.MouseLeave:Connect(function()
+	strongholdTeleportButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+end)
+
+strongholdTeleportButton.MouseButton1Click:Connect(function()
+    local targetPart = workspace:FindFirstChild("Map")
+        and workspace.Map:FindFirstChild("Landmarks")
+        and workspace.Map.Landmarks:FindFirstChild("Stronghold")
+        
+    if targetPart then
+        local char = Players.LocalPlayer.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = targetPart.PrimaryPart 
+                and targetPart.PrimaryPart.CFrame + Vector3.new(0, 10, 0)
+                or targetPart:GetModelCFrame() + Vector3.new(0, 10, 0)
+        end
+    else
+        playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "AZC HUB",
+            Text = "لم يتم العثور علي القلعة يرجى تشغيل ميزة تحميل الماب اولا",
+            Duration = 999,
+            Button1 = "Script By FR3ON",
+            Icon = azcIcon
+        })
+    end
+end)
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+local espGuis = {}
+local activeSelections = {}
+local itemESPConnection
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+
+local mainButton = Instance.new("TextButton", infSection)
+mainButton.Size = UDim2.new(1, -20, 0, 40)
+mainButton.Position = UDim2.new(0, 10, 0, 10)
+mainButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+mainButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+mainButton.Text = ""
+mainButton.Font = Enum.Font.SourceSansBold
+mainButton.TextScaled = true
+mainButton.BorderSizePixel = 0
+Instance.new("UICorner", mainButton).CornerRadius = UDim.new(0, 8)
+
+local btnLabel = Instance.new("TextLabel", mainButton)
+btnLabel.Size = UDim2.new(1, -40, 1, 0)
+btnLabel.Position = UDim2.new(0, 10, 0, 0)
+btnLabel.BackgroundTransparency = 1
+btnLabel.Text = "قائمة الاشياء"
+btnLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+btnLabel.Font = Enum.Font.SourceSansBold
+btnLabel.TextScaled = true
+btnLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local arrow = Instance.new("TextLabel", mainButton)
+arrow.Size = UDim2.new(0, 20, 1, 0)
+arrow.Position = UDim2.new(1, -35, 0, 0)
+arrow.BackgroundTransparency = 1
+arrow.Text = "▼"
+arrow.TextColor3 = Color3.fromRGB(255, 255, 255)
+arrow.Font = Enum.Font.SourceSansBold
+arrow.TextScaled = true
+
+local espLabel = Instance.new("TextLabel", infSection)
+espLabel.Size = UDim2.new(0.5, -15, 0, 40)
+espLabel.Position = UDim2.new(0, 10, 0, 60)
+espLabel.Text = "كشف الاشياء"
+espLabel.Font = Enum.Font.SourceSansBold
+espLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+espLabel.BackgroundTransparency = 1
+espLabel.TextScaled = true
+espLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local espSwitch = Instance.new("TextButton", infSection)
+espSwitch.Size = UDim2.new(0, 60, 0, 30)
+espSwitch.Position = UDim2.new(1, -70, 0, 65)
+espSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+espSwitch.Text = ""
+espSwitch.AutoButtonColor = false
+espSwitch.BorderSizePixel = 0
+
+local espCircle = Instance.new("Frame", espSwitch)
+espCircle.Size = UDim2.new(0, 26, 0, 26)
+espCircle.Position = UDim2.new(0, 2, 0, 2)
+espCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+espCircle.BorderSizePixel = 0
+
+Instance.new("UICorner", espSwitch).CornerRadius = UDim.new(1, 0)
+Instance.new("UICorner", espCircle).CornerRadius = UDim.new(1, 0)
+
+local espEnabled = false
+
+local dropdown = Instance.new("ScrollingFrame", infSection)
+dropdown.Size = UDim2.new(1, -20, 0, 0)
+dropdown.Position = UDim2.new(0, 10, 0, 60)
+dropdown.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+dropdown.CanvasSize = UDim2.new(0, 0, 0, 0)
+dropdown.ScrollBarThickness = 8
+Instance.new("UICorner", dropdown).CornerRadius = UDim.new(0, 8)
+
+local sections = {
+    ["الحديد"] = {"Gem of the Forest Fragment","Gem of the Forest","Cultist Gem","UFO Junk","UFO Component","UFO Scrap",
+        "Old Car Engine","Washing Machine","Broken Microwave","Broken Fan","Old Radio","Sheet Metal","Tyre","Bolt"},
+    ["الوقود"] = {"Log","Sapling","Coal","Fuel Canister","Oil Barrel"},
+    ["الادوات"] = {"Revolver","Rifle","Tactical Shotgun","Revolver Ammo","Rifle Ammo","Alien Armour","Leather Body","Iron Body","Thorn Body","Riot Shield",
+        "Old Flashlight","Strong Flashlight","Morningstar","Laser Sword","Raygun","Chainsaw","Strong Axe","Good Axe","Giant Sack","Good Sack","Spear"},
+    ["الطعام"] = {"Carrot","Berry","Morsel","Steak","Cooked Morsel","Cooked Steak","Ribs","Cooked Ribs"},
+    ["اخر"] = {"Bunny Foot","Wolf Pelt","Alpha Wold Pelt","Bear Pelt","Arctic Fox Pelt","Polar Bear Pelt","Mammoth Tusk","Seed Box","Bandage","Medkit"}
+}
+
+local yPos = 0
+for sectionName, items in pairs(sections) do
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 30)
+    title.Position = UDim2.new(0, 0, 0, yPos)
+    title.BackgroundTransparency = 1
+    title.TextColor3 = Color3.fromRGB(255, 255, 0)
+    title.Text = sectionName
+    title.Font = Enum.Font.SourceSansBold
+    title.TextScaled = true
+    title.Parent = dropdown
+    yPos = yPos + 30
+
+    for _, itemName in ipairs(items) do
+        local option = Instance.new("TextButton")
+        option.Size = UDim2.new(1, 0, 0, 30)
+        option.Position = UDim2.new(0, 0, 0, yPos)
+        option.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+        option.TextColor3 = Color3.fromRGB(255, 255, 255)
+        option.Text = itemName
+        option.TextSize = 14
+        option.Parent = dropdown
+
+        local selectedIndicator = Instance.new("Frame")
+        selectedIndicator.Size = UDim2.new(0, 5, 1, 0)
+        selectedIndicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        selectedIndicator.Visible = false
+        selectedIndicator.Parent = option
+
+        option.MouseButton1Click:Connect(function()
+            if activeSelections[itemName] then
+                activeSelections[itemName] = nil
+                selectedIndicator.Visible = false
+            else
+                activeSelections[itemName] = true
+                selectedIndicator.Visible = true
+            end
+        end)
+        yPos = yPos + 30
+    end
+end
+dropdown.CanvasSize = UDim2.new(0, 0, 0, yPos)
+
+local dropdownOpen = false
+mainButton.MouseButton1Click:Connect(function()
+    dropdownOpen = not dropdownOpen
+    if dropdownOpen then
+        arrow.Text = "▲"
+        TweenService:Create(dropdown, TweenInfo.new(0.3), {Size = UDim2.new(1, -20, 0, 200)}):Play()
+    else
+        arrow.Text = "▼"
+        TweenService:Create(dropdown, TweenInfo.new(0.3), {Size = UDim2.new(1, -20, 0, 0)}):Play()
+    end
+end)
+
+local function createESP(itemModel)
+    local adornee = itemModel:FindFirstChildWhichIsA("BasePart")
+    if not adornee then return end
+
+    local billboardGui = Instance.new("BillboardGui")
+    billboardGui.Size = UDim2.new(0, 150, 0, 30)
+    billboardGui.Adornee = adornee
+    billboardGui.AlwaysOnTop = true
+    billboardGui.ExtentsOffsetWorldSpace = Vector3.new(0, 2, 0)
+    billboardGui.Parent = adornee
+
+    local label = Instance.new("TextLabel", billboardGui)
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.Text = itemModel.Name .. "\n AZC Hub - FR3ON"
+    label.Font = Enum.Font.SourceSansBold
+    label.TextColor3 = Color3.fromRGB(255, 0, 0)
+    label.TextScaled = true
+    label.TextStrokeTransparency = 0.5
+    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+
+    espGuis[itemModel] = billboardGui
+end
+
+local function startESP()
+    if next(activeSelections) == nil then
+        playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "AZC HUB",
+            Text = "لم يتم تحديد اي شيء",
+            Duration = 999,
+            Button1 = "Script By FR3ON",
+            Icon = azcIcon
+        })
+        return
+    end
+    if itemESPConnection then
+        itemESPConnection:Disconnect()
+        itemESPConnection = nil
+    end
+    itemESPConnection = RunService.RenderStepped:Connect(function()
+        local itemsFolder = workspace:FindFirstChild("Items")
+        if not itemsFolder then return end
+        for _, itemModel in pairs(itemsFolder:GetChildren()) do
+            if itemModel:IsA("Model") and activeSelections[itemModel.Name] then
+                if not espGuis[itemModel] then
+                    local skip = false
+                    for otherModel, _ in pairs(espGuis) do
+                        if otherModel.PrimaryPart and itemModel.PrimaryPart then
+                            local dist = (otherModel.PrimaryPart.Position - itemModel.PrimaryPart.Position).Magnitude
+                            if dist < 15 then skip = true break end
+                        end
+                    end
+                    if not skip then
+                        createESP(itemModel)
+                    end
+                end
+            end
+        end
+    end)
+end
+
+local function stopESP()
+    if itemESPConnection then
+        itemESPConnection:Disconnect()
+        itemESPConnection = nil
+    end
+    for model, gui in pairs(espGuis) do
+        if gui then gui:Destroy() end
+    end
+    espGuis = {}
+end
+
+local function updateESP(state)
+    espEnabled = state
+    if state then
+        espSwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        espCircle:TweenPosition(UDim2.new(1, -28, 0, 2), "Out", "Quad", 0.2, true)
+        startESP()
+    else
+        espSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        espCircle:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.2, true)
+        stopESP()
+    end
+end
+
+espSwitch.MouseButton1Click:Connect(function()
+    updateESP(not espEnabled)
+end)
+-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+-- الكائنات - ESP
+
+local creaturesFolder = workspace:WaitForChild("Characters")
+
+-- قائمة الكائنات المستهدفة
+local creatureTargets = {
+	"Bunny","Frog","Wolf","Alpha Wolf","Bear",
+	"Polar Bear","Arctic Fox","Mammoth",
+	"Cultist","Crossbow Cultist","Juggernaut Cultist"
+}
+
+-- تخزين التحديدات
+local activeCreatures = {}
+
+-- زر القائمة
+local creaturesButton = Instance.new("TextButton", dropdownFrame)
+creaturesButton.Size = UDim2.new(1, -20, 0, 40)
+creaturesButton.Position = UDim2.new(0, 10, 0, 10)
+creaturesButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+creaturesButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+creaturesButton.Font = Enum.Font.SourceSansBold
+creaturesButton.TextSize = 18
+creaturesButton.Text = "الكائنات ▼"
+
+local creaturesList = Instance.new("Frame", dropdownFrame)
+creaturesList.Size = UDim2.new(1, -20, 0, #creatureTargets * 35)
+creaturesList.Position = UDim2.new(0, 10, 0, 60)
+creaturesList.BackgroundTransparency = 1
+creaturesList.Visible = false
+
+-- العناصر
+for i, name in ipairs(creatureTargets) do
+	local itemButton = Instance.new("TextButton", creaturesList)
+	itemButton.Size = UDim2.new(1, 0, 0, 30)
+	itemButton.Position = UDim2.new(0, 0, 0, (i-1) * 35)
+	itemButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	itemButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	itemButton.Font = Enum.Font.SourceSans
+	itemButton.TextSize = 16
+	itemButton.Text = name
+
+	local selectedMark = Instance.new("Frame", itemButton)
+	selectedMark.Size = UDim2.new(0, 20, 0, 20)
+	selectedMark.Position = UDim2.new(1, -25, 0.5, -10)
+	selectedMark.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+	selectedMark.Visible = false
+
+	itemButton.MouseButton1Click:Connect(function()
+		if activeCreatures[name] then
+			activeCreatures[name] = nil
+			selectedMark.Visible = false
+		else
+			activeCreatures[name] = true
+			selectedMark.Visible = true
+		end
+	end)
+end
+
+-- فتح/غلق القائمة
+local creaturesOpen = false
+creaturesButton.MouseButton1Click:Connect(function()
+	creaturesOpen = not creaturesOpen
+	creaturesList.Visible = creaturesOpen
+	creaturesButton.Text = creaturesOpen and "الكائنات ▲" or "الكائنات ▼"
+end)
+
+-- سويتش ESP للكائنات
+local creaturesEspLabel = Instance.new("TextLabel", dropdownFrame)
+creaturesEspLabel.Size = UDim2.new(0.6, 0, 0, 40)
+creaturesEspLabel.Position = UDim2.new(0, 10, 0, 300)
+creaturesEspLabel.BackgroundTransparency = 1
+creaturesEspLabel.Text = "كشف الكائنات"
+creaturesEspLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+creaturesEspLabel.Font = Enum.Font.SourceSansBold
+creaturesEspLabel.TextSize = 18
+creaturesEspLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local creaturesEspSwitch = Instance.new("TextButton", dropdownFrame)
+creaturesEspSwitch.Size = UDim2.new(0, 60, 0, 30)
+creaturesEspSwitch.Position = UDim2.new(1, -70, 0, 300)
+creaturesEspSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+creaturesEspSwitch.Text = ""
+
+local creaturesEspCircle = Instance.new("Frame", creaturesEspSwitch)
+creaturesEspCircle.Size = UDim2.new(0, 26, 0, 26)
+creaturesEspCircle.Position = UDim2.new(0, 2, 0, 2)
+creaturesEspCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+creaturesEspCircle.BorderSizePixel = 0
+creaturesEspCircle.ZIndex = 2
+
+local creaturesEspEnabled = false
+local creaturesEspConnections = {}
+
+-- وظيفة تفعيل/تعطيل ESP
+local function toggleCreaturesESP(state)
+	creaturesEspEnabled = state
+	if state then
+		creaturesEspSwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+		creaturesEspCircle:TweenPosition(UDim2.new(1, -28, 0, 2), "Out", "Quad", 0.2, true)
+
+		-- مراقبة الكائنات
+		for _, creature in ipairs(creaturesFolder:GetChildren()) do
+			if table.find(creatureTargets, creature.Name) then
+				if activeCreatures[creature.Name] then
+					local billboard = Instance.new("BillboardGui", creature:WaitForChild("HumanoidRootPart"))
+					billboard.Size = UDim2.new(0, 100, 0, 50)
+					billboard.Adornee = creature:WaitForChild("HumanoidRootPart")
+					billboard.AlwaysOnTop = true
+
+					local label = Instance.new("TextLabel", billboard)
+					label.Size = UDim2.new(1, 0, 1, 0)
+					label.BackgroundTransparency = 1
+					label.Text = creature.Name
+					label.TextColor3 = Color3.fromRGB(255, 0, 0)
+					label.Font = Enum.Font.SourceSansBold
+					label.TextScaled = true
+
+					table.insert(creaturesEspConnections, billboard)
+				end
+			end
+		end
+
+	else
+		creaturesEspSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+		creaturesEspCircle:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.2, true)
+		-- إزالة كل الـ ESP
+		for _, gui in ipairs(creaturesEspConnections) do
+			gui:Destroy()
+		end
+		creaturesEspConnections = {}
+	end
+end
+
+-- عند الضغط على السويتش
+creaturesEspSwitch.MouseButton1Click:Connect(function()
+	toggleCreaturesESP(not creaturesEspEnabled)
+end)
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------
+local autoEnabled = false
+
+local autoLabel = Instance.new("TextLabel", autoSection)
+autoLabel.Size = UDim2.new(0.6, 0, 0, 40)
+autoLabel.Position = UDim2.new(0, 10, 0, 10)
+autoLabel.Text = "تكبير جزء النجاح اثناء الصيد"
+autoLabel.Font = Enum.Font.SourceSansBold
+autoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+autoLabel.BackgroundTransparency = 1
+autoLabel.TextScaled = true
+autoLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local autoSwitch = Instance.new("TextButton", autoSection)
+autoSwitch.Size = UDim2.new(0, 60, 0, 30)
+autoSwitch.Position = UDim2.new(1, -70, 0, 10)
+autoSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+autoSwitch.Text = ""
+autoSwitch.AutoButtonColor = false
+autoSwitch.BorderSizePixel = 0
+
+local autoCircle = Instance.new("Frame", autoSwitch)
+autoCircle.Size = UDim2.new(0, 26, 0, 26)
+autoCircle.Position = UDim2.new(0, 2, 0, 2)
+autoCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+autoCircle.BorderSizePixel = 0
+
+Instance.new("UICorner", autoSwitch).CornerRadius = UDim.new(1, 0)
+Instance.new("UICorner", autoCircle).CornerRadius = UDim.new(1, 0)
+
+local interface = playerGui:FindFirstChild("Interface")
+local fishingCatchFrame = interface and interface:FindFirstChild("FishingCatchFrame")
+local timingBar = fishingCatchFrame and fishingCatchFrame:FindFirstChild("TimingBar")
+local bar = timingBar and timingBar:FindFirstChild("Bar")
+local successArea = timingBar and timingBar:FindFirstChild("SuccessArea")
+
+local autoConnection
+
+local function startAuto()
+	if autoConnection then autoConnection:Disconnect() end
+	if not timingBar or not successArea then return end
+	autoConnection = RunService.RenderStepped:Connect(function()
+		if timingBar and successArea then
+			successArea.Size = UDim2.new(1, 0, 1, 0)
+			successArea.Position = UDim2.new(0, 0, 0, 0)
+			successArea.AnchorPoint = Vector2.new(0,0)
+		end
+	end)
+end
+
+local function stopAuto()
+	if autoConnection then
+		autoConnection:Disconnect()
+		autoConnection = nil
+	end
+end
+
+local function updateAuto(state)
+	autoEnabled = state
+	if state then
+		autoSwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+		autoCircle:TweenPosition(UDim2.new(1, -28, 0, 2), "Out", "Quad", 0.2, true)
+		startAuto()
+	else
+		autoSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+		autoCircle:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.2, true)
+		stopAuto()
+	end
+end
+
+autoSwitch.MouseButton1Click:Connect(function()
+	updateAuto(not autoEnabled)
+end)
+
+-----------------------------------------------------------------------------
+local toggleWaterButton = Instance.new("TextButton", autoSection)
+toggleWaterButton.Size = UDim2.new(0.9, 0, 0, 60)
+toggleWaterButton.Position = UDim2.new(0, 10, 0, 60)
+toggleWaterButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+toggleWaterButton.Text = ""
+toggleWaterButton.BorderSizePixel = 0
+
+local waterCorner = Instance.new("UICorner")
+waterCorner.CornerRadius = UDim.new(0, 10)
+waterCorner.Parent = toggleWaterButton
+
+local waterLabel = Instance.new("TextLabel", toggleWaterButton)
+waterLabel.Size = UDim2.new(1, -80, 1, 0)
+waterLabel.Position = UDim2.new(0, 15, 0, 0)
+waterLabel.BackgroundTransparency = 1
+waterLabel.Text = "سحب بحيرة عشوائية"
+waterLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+waterLabel.TextXAlignment = Enum.TextXAlignment.Left
+waterLabel.Font = Enum.Font.GothamBold
+waterLabel.TextSize = 27
+waterLabel.TextScaled = false
+
+local waterIcon = Instance.new("ImageLabel", toggleWaterButton)
+waterIcon.Size = UDim2.new(0, 40, 0, 40)
+waterIcon.Position = UDim2.new(1, -50, 0.5, -20)
+waterIcon.BackgroundTransparency = 1
+waterIcon.Image = clickIcon
+
+toggleWaterButton.MouseEnter:Connect(function()
+	toggleWaterButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+end)
+toggleWaterButton.MouseLeave:Connect(function()
+	toggleWaterButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+end)
+
+local grabbedPart
+local originalCFrame
+local isGrabbed = false
+
+toggleWaterButton.MouseButton1Click:Connect(function()
+	local map = workspace:FindFirstChild("Map")
+	local waterFolder = map and map:FindFirstChild("Water")
+
+	if not isGrabbed then
+		if waterFolder then
+			for _, part in ipairs(waterFolder:GetChildren()) do
+				if part:IsA("BasePart") and part.Color == Color3.fromRGB(0, 0, 255) then
+					grabbedPart = part
+					originalCFrame = part.CFrame
+					if hrp then
+						part.CFrame = hrp.CFrame * CFrame.new(0, 0, -5)
+					end
+					isGrabbed = true
+					break
+				end
+			end
+		end
+
+		if not isGrabbed then
+			playSound("Azc Notifications", "https://github.com/thecomplexjason/FR3ON/raw/refs/heads/main/Azc%20Notifications.mp3")
+			game.StarterGui:SetCore("SendNotification", {
+				Title = "AZC HUB",
+				Text = "لم يتم العثور علي بحيرة",
+				Duration = 999,
+				Button1 = "Script By FR3ON",
+				Icon = azcIcon
+			})
+		end
+	else
+		if grabbedPart and originalCFrame then
+			grabbedPart.CFrame = originalCFrame
+			isGrabbed = false
+		end
+	end
+end)
+-----------------------------------------------------------------------------
+end
