@@ -2103,150 +2103,203 @@ end)
 
 
 
+-- ESP للكائنات
+local creatureEspGuis = {}
+local activeCreatures = {}
+local creatureESPConnection
+local creatureEspEnabled = false
 
+-- زرار القائمة
+local creatureMainButton = Instance.new("TextButton", infSection)
+creatureMainButton.Size = UDim2.new(1, -20, 0, 40)
+creatureMainButton.Position = UDim2.new(0, 10, 0, 280) -- غيرت الـ Position عشان ما يدخلش في بتاع الأشياء
+creatureMainButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+creatureMainButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+creatureMainButton.Text = ""
+creatureMainButton.Font = Enum.Font.SourceSansBold
+creatureMainButton.TextScaled = true
+creatureMainButton.BorderSizePixel = 0
+Instance.new("UICorner", creatureMainButton).CornerRadius = UDim.new(0, 8)
 
+local creatureBtnLabel = Instance.new("TextLabel", creatureMainButton)
+creatureBtnLabel.Size = UDim2.new(1, -40, 1, 0)
+creatureBtnLabel.Position = UDim2.new(0, 10, 0, 0)
+creatureBtnLabel.BackgroundTransparency = 1
+creatureBtnLabel.Text = "قائمة الكائنات"
+creatureBtnLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+creatureBtnLabel.Font = Enum.Font.SourceSansBold
+creatureBtnLabel.TextScaled = true
+creatureBtnLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- الكائنات - ESP
+local creatureArrow = Instance.new("TextLabel", creatureMainButton)
+creatureArrow.Size = UDim2.new(0, 20, 1, 0)
+creatureArrow.Position = UDim2.new(1, -35, 0, 0)
+creatureArrow.BackgroundTransparency = 1
+creatureArrow.Text = "▼"
+creatureArrow.TextColor3 = Color3.fromRGB(255, 255, 255)
+creatureArrow.Font = Enum.Font.SourceSansBold
+creatureArrow.TextScaled = true
 
-local creaturesFolder = workspace:WaitForChild("Characters")
+-- سويتش الكائنات
+local creatureLabel = Instance.new("TextLabel", infSection)
+creatureLabel.Size = UDim2.new(0.5, -15, 0, 40)
+creatureLabel.Position = UDim2.new(0, 10, 0, 330)
+creatureLabel.Text = "كشف الكائنات"
+creatureLabel.Font = Enum.Font.SourceSansBold
+creatureLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+creatureLabel.BackgroundTransparency = 1
+creatureLabel.TextScaled = true
+creatureLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- قائمة الكائنات المستهدفة
-local creatureTargets = {
-	"Bunny","Frog","Wolf","Alpha Wolf","Bear",
-	"Polar Bear","Arctic Fox","Mammoth",
-	"Cultist","Crossbow Cultist","Juggernaut Cultist"
+local creatureSwitch = Instance.new("TextButton", infSection)
+creatureSwitch.Size = UDim2.new(0, 60, 0, 30)
+creatureSwitch.Position = UDim2.new(1, -70, 0, 335)
+creatureSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+creatureSwitch.Text = ""
+creatureSwitch.AutoButtonColor = false
+creatureSwitch.BorderSizePixel = 0
+
+local creatureCircle = Instance.new("Frame", creatureSwitch)
+creatureCircle.Size = UDim2.new(0, 26, 0, 26)
+creatureCircle.Position = UDim2.new(0, 2, 0, 2)
+creatureCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+creatureCircle.BorderSizePixel = 0
+
+Instance.new("UICorner", creatureSwitch).CornerRadius = UDim.new(1, 0)
+Instance.new("UICorner", creatureCircle).CornerRadius = UDim.new(1, 0)
+
+-- قائمة الكائنات
+local creatureDropdown = Instance.new("ScrollingFrame", infSection)
+creatureDropdown.Size = UDim2.new(1, -20, 0, 0)
+creatureDropdown.Position = UDim2.new(0, 10, 0, 380)
+creatureDropdown.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+creatureDropdown.CanvasSize = UDim2.new(0, 0, 0, 0)
+creatureDropdown.ScrollBarThickness = 8
+Instance.new("UICorner", creatureDropdown).CornerRadius = UDim.new(0, 8)
+
+local creatures = {
+    "Bunny","Frog","Wolf","Alpha Wolf","Bear",
+    "Polar Bear","Arctic Fox","Mammoth",
+    "Cultist","Crossbow Cultist","Juggernaut Cultist"
 }
 
--- تخزين التحديدات
-local activeCreatures = {}
+local yPos = 0
+for _, creatureName in ipairs(creatures) do
+    local option = Instance.new("TextButton")
+    option.Size = UDim2.new(1, 0, 0, 30)
+    option.Position = UDim2.new(0, 0, 0, yPos)
+    option.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+    option.TextColor3 = Color3.fromRGB(255, 255, 255)
+    option.Text = creatureName
+    option.TextSize = 14
+    option.Parent = creatureDropdown
 
--- زر القائمة
-local creaturesButton = Instance.new("TextButton", dropdownFrame)
-creaturesButton.Size = UDim2.new(1, -20, 0, 40)
-creaturesButton.Position = UDim2.new(0, 10, 0, 10)
-creaturesButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-creaturesButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-creaturesButton.Font = Enum.Font.SourceSansBold
-creaturesButton.TextSize = 18
-creaturesButton.Text = "الكائنات ▼"
+    local selectedIndicator = Instance.new("Frame")
+    selectedIndicator.Size = UDim2.new(0, 5, 1, 0)
+    selectedIndicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    selectedIndicator.Visible = false
+    selectedIndicator.Parent = option
 
-local creaturesList = Instance.new("Frame", dropdownFrame)
-creaturesList.Size = UDim2.new(1, -20, 0, #creatureTargets * 35)
-creaturesList.Position = UDim2.new(0, 10, 0, 60)
-creaturesList.BackgroundTransparency = 1
-creaturesList.Visible = false
+    option.MouseButton1Click:Connect(function()
+        if activeCreatures[creatureName] then
+            activeCreatures[creatureName] = nil
+            selectedIndicator.Visible = false
+        else
+            activeCreatures[creatureName] = true
+            selectedIndicator.Visible = true
+        end
+    end)
 
--- العناصر
-for i, name in ipairs(creatureTargets) do
-	local itemButton = Instance.new("TextButton", creaturesList)
-	itemButton.Size = UDim2.new(1, 0, 0, 30)
-	itemButton.Position = UDim2.new(0, 0, 0, (i-1) * 35)
-	itemButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-	itemButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-	itemButton.Font = Enum.Font.SourceSans
-	itemButton.TextSize = 16
-	itemButton.Text = name
-
-	local selectedMark = Instance.new("Frame", itemButton)
-	selectedMark.Size = UDim2.new(0, 20, 0, 20)
-	selectedMark.Position = UDim2.new(1, -25, 0.5, -10)
-	selectedMark.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
-	selectedMark.Visible = false
-
-	itemButton.MouseButton1Click:Connect(function()
-		if activeCreatures[name] then
-			activeCreatures[name] = nil
-			selectedMark.Visible = false
-		else
-			activeCreatures[name] = true
-			selectedMark.Visible = true
-		end
-	end)
+    yPos = yPos + 30
 end
+creatureDropdown.CanvasSize = UDim2.new(0, 0, 0, yPos)
 
--- فتح/غلق القائمة
-local creaturesOpen = false
-creaturesButton.MouseButton1Click:Connect(function()
-	creaturesOpen = not creaturesOpen
-	creaturesList.Visible = creaturesOpen
-	creaturesButton.Text = creaturesOpen and "الكائنات ▲" or "الكائنات ▼"
+-- فتح وقفل القائمة
+local creatureDropdownOpen = false
+creatureMainButton.MouseButton1Click:Connect(function()
+    creatureDropdownOpen = not creatureDropdownOpen
+    if creatureDropdownOpen then
+        creatureArrow.Text = "▲"
+        TweenService:Create(creatureDropdown, TweenInfo.new(0.3), {Size = UDim2.new(1, -20, 0, 200)}):Play()
+    else
+        creatureArrow.Text = "▼"
+        TweenService:Create(creatureDropdown, TweenInfo.new(0.3), {Size = UDim2.new(1, -20, 0, 0)}):Play()
+    end
 end)
 
--- سويتش ESP للكائنات
-local creaturesEspLabel = Instance.new("TextLabel", dropdownFrame)
-creaturesEspLabel.Size = UDim2.new(0.6, 0, 0, 40)
-creaturesEspLabel.Position = UDim2.new(0, 10, 0, 300)
-creaturesEspLabel.BackgroundTransparency = 1
-creaturesEspLabel.Text = "كشف الكائنات"
-creaturesEspLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-creaturesEspLabel.Font = Enum.Font.SourceSansBold
-creaturesEspLabel.TextSize = 18
-creaturesEspLabel.TextXAlignment = Enum.TextXAlignment.Left
+-- ESP للكائنات
+local function createCreatureESP(model)
+    local adornee = model:FindFirstChildWhichIsA("BasePart")
+    if not adornee then return end
 
-local creaturesEspSwitch = Instance.new("TextButton", dropdownFrame)
-creaturesEspSwitch.Size = UDim2.new(0, 60, 0, 30)
-creaturesEspSwitch.Position = UDim2.new(1, -70, 0, 300)
-creaturesEspSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-creaturesEspSwitch.Text = ""
+    local billboardGui = Instance.new("BillboardGui")
+    billboardGui.Size = UDim2.new(0, 150, 0, 30)
+    billboardGui.Adornee = adornee
+    billboardGui.AlwaysOnTop = true
+    billboardGui.ExtentsOffsetWorldSpace = Vector3.new(0, 2, 0)
+    billboardGui.Parent = adornee
 
-local creaturesEspCircle = Instance.new("Frame", creaturesEspSwitch)
-creaturesEspCircle.Size = UDim2.new(0, 26, 0, 26)
-creaturesEspCircle.Position = UDim2.new(0, 2, 0, 2)
-creaturesEspCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-creaturesEspCircle.BorderSizePixel = 0
-creaturesEspCircle.ZIndex = 2
+    local label = Instance.new("TextLabel", billboardGui)
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.Text = model.Name .. "\n AZC Hub - FR3ON"
+    label.Font = Enum.Font.SourceSansBold
+    label.TextColor3 = Color3.fromRGB(0, 255, 0)
+    label.TextScaled = true
+    label.TextStrokeTransparency = 0.5
+    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
 
-local creaturesEspEnabled = false
-local creaturesEspConnections = {}
-
--- وظيفة تفعيل/تعطيل ESP
-local function toggleCreaturesESP(state)
-	creaturesEspEnabled = state
-	if state then
-		creaturesEspSwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
-		creaturesEspCircle:TweenPosition(UDim2.new(1, -28, 0, 2), "Out", "Quad", 0.2, true)
-
-		-- مراقبة الكائنات
-		for _, creature in ipairs(creaturesFolder:GetChildren()) do
-			if table.find(creatureTargets, creature.Name) then
-				if activeCreatures[creature.Name] then
-					local billboard = Instance.new("BillboardGui", creature:WaitForChild("HumanoidRootPart"))
-					billboard.Size = UDim2.new(0, 100, 0, 50)
-					billboard.Adornee = creature:WaitForChild("HumanoidRootPart")
-					billboard.AlwaysOnTop = true
-
-					local label = Instance.new("TextLabel", billboard)
-					label.Size = UDim2.new(1, 0, 1, 0)
-					label.BackgroundTransparency = 1
-					label.Text = creature.Name
-					label.TextColor3 = Color3.fromRGB(255, 0, 0)
-					label.Font = Enum.Font.SourceSansBold
-					label.TextScaled = true
-
-					table.insert(creaturesEspConnections, billboard)
-				end
-			end
-		end
-
-	else
-		creaturesEspSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-		creaturesEspCircle:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.2, true)
-		-- إزالة كل الـ ESP
-		for _, gui in ipairs(creaturesEspConnections) do
-			gui:Destroy()
-		end
-		creaturesEspConnections = {}
-	end
+    creatureEspGuis[model] = billboardGui
 end
 
--- عند الضغط على السويتش
-creaturesEspSwitch.MouseButton1Click:Connect(function()
-	toggleCreaturesESP(not creaturesEspEnabled)
+local function startCreatureESP()
+    if next(activeCreatures) == nil then
+        return
+    end
+    if creatureESPConnection then
+        creatureESPConnection:Disconnect()
+        creatureESPConnection = nil
+    end
+    creatureESPConnection = RunService.RenderStepped:Connect(function()
+        local charactersFolder = workspace:FindFirstChild("Characters")
+        if not charactersFolder then return end
+        for _, creature in pairs(charactersFolder:GetChildren()) do
+            if creature:IsA("Model") and activeCreatures[creature.Name] then
+                if not creatureEspGuis[creature] then
+                    createCreatureESP(creature)
+                end
+            end
+        end
+    end)
+end
+
+local function stopCreatureESP()
+    if creatureESPConnection then
+        creatureESPConnection:Disconnect()
+        creatureESPConnection = nil
+    end
+    for model, gui in pairs(creatureEspGuis) do
+        if gui then gui:Destroy() end
+    end
+    creatureEspGuis = {}
+end
+
+local function updateCreatureESP(state)
+    creatureEspEnabled = state
+    if state then
+        creatureSwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        creatureCircle:TweenPosition(UDim2.new(1, -28, 0, 2), "Out", "Quad", 0.2, true)
+        startCreatureESP()
+    else
+        creatureSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        creatureCircle:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.2, true)
+        stopCreatureESP()
+    end
+end
+
+creatureSwitch.MouseButton1Click:Connect(function()
+    updateCreatureESP(not creatureEspEnabled)
 end)
-
-
-
-
 
 
 
